@@ -12,5 +12,6 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface DossierMedicalRepository extends JpaRepository<DossierMedical, Long> {
-    Optional<DossierMedical> findByPatientId(Long aLong);
+    Optional<DossierMedical> findByPatient_Id(Long id);
+
 }

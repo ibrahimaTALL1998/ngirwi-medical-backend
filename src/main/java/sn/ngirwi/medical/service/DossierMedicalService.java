@@ -101,9 +101,9 @@ public class DossierMedicalService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<DossierMedicalDTO> findPatient(Long id) {
+    public Optional<DossierMedical> findPatient(Long id) {
         log.debug("Request to get DossierMedical for specific patient: {}", id);
-        return dossierMedicalRepository.findByPatientId(id).map(dossierMedicalMapper::toDto);
+        return dossierMedicalRepository.findByPatient_Id(id);
     }
 
     /**

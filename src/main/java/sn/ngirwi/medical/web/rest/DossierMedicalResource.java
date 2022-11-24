@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import sn.ngirwi.medical.domain.DossierMedical;
 import sn.ngirwi.medical.repository.DossierMedicalRepository;
 import sn.ngirwi.medical.service.DossierMedicalService;
 import sn.ngirwi.medical.service.dto.DossierMedicalDTO;
@@ -168,9 +168,9 @@ public class DossierMedicalResource {
     }
 
     @GetMapping("/dossier-medicals-patient/{id}")
-    public ResponseEntity<DossierMedicalDTO> getDossierPatient(@PathVariable Long id) {
+    public ResponseEntity<DossierMedical> getDossierPatient(@PathVariable Long id) {
         log.debug("REST request to get DossierMedical for specific patient: {}", id);
-        Optional<DossierMedicalDTO> dossierMedicalDTO = dossierMedicalService.findPatient(id);
+        Optional<DossierMedical> dossierMedicalDTO = dossierMedicalService.findPatient(id);
         return ResponseUtil.wrapOrNotFound(dossierMedicalDTO);
     }
 
