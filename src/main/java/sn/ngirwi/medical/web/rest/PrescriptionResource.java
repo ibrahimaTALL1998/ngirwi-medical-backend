@@ -67,6 +67,16 @@ public class PrescriptionResource {
             .body(result);
     }
 
+    @PostMapping("/prescriptionsbis")
+    public void createPrescriptionBis(@RequestBody PrescriptionDTO prescriptionDTO) throws URISyntaxException {
+        log.debug("REST request to save Prescription with Form: {}", prescriptionDTO);
+        if (prescriptionDTO.getId() != null) {
+            throw new BadRequestAlertException("A new prescription cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        PrescriptionDTO result = prescriptionService.saveBis(prescriptionDTO);
+
+    }
+
     /**
      * {@code PUT  /prescriptions/:id} : Updates an existing prescription.
      *

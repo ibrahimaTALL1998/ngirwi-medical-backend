@@ -1,16 +1,23 @@
 package sn.ngirwi.medical.service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sn.ngirwi.medical.domain.Consultation;
+import sn.ngirwi.medical.domain.Medecine;
 import sn.ngirwi.medical.domain.Prescription;
 import sn.ngirwi.medical.repository.PrescriptionRepository;
 import sn.ngirwi.medical.service.dto.PrescriptionDTO;
+import sn.ngirwi.medical.service.mapper.ConsultationMapper;
 import sn.ngirwi.medical.service.mapper.PrescriptionMapper;
+import sn.ngirwi.medical.service.model.PrescriptionForm;
 
 /**
  * Service Implementation for managing {@link Prescription}.
@@ -25,9 +32,13 @@ public class PrescriptionService {
 
     private final PrescriptionMapper prescriptionMapper;
 
-    public PrescriptionService(PrescriptionRepository prescriptionRepository, PrescriptionMapper prescriptionMapper) {
+    private final ConsultationMapper consultationMapper;
+
+
+    public PrescriptionService(PrescriptionRepository prescriptionRepository, PrescriptionMapper prescriptionMapper, ConsultationMapper consultationMapper) {
         this.prescriptionRepository = prescriptionRepository;
         this.prescriptionMapper = prescriptionMapper;
+        this.consultationMapper = consultationMapper;
     }
 
     /**
@@ -108,5 +119,48 @@ public class PrescriptionService {
     public void delete(Long id) {
         log.debug("Request to delete Prescription : {}", id);
         prescriptionRepository.deleteById(id);
+    }
+
+
+    public Prescription map(PrescriptionDTO prescriptionDTO) {
+        Prescription p = new Prescription();
+        //p.setId(prescriptionDTO.getId());
+        p.setAuthor(prescriptionDTO.getAuthor());
+        p.setCreationDate(prescriptionDTO.getCreationDate());
+        Consultation c = consultationMapper.toEntity(prescriptionDTO.getConsultation());
+        p.setConsultation(c);
+        Set<Medecine> medecines = medecineMapper(prescriptionDTO);
+        for (Medecine m : medecines){
+            m.setOrdonance(p);
+        }
+        p.setMedecines(medecines);
+        return p;
+    }
+
+    public Set<Medecine> medecineMapper(PrescriptionDTO prescriptionDTO){
+        Set<Medecine> s = new HashSet<>();
+        for (int i = 0; i < prescriptionDTO.getForm().toArray().length; i++){
+            for (PrescriptionForm f : prescriptionDTO.getForm()){
+                Medecine m = new Medecine();
+                //m.setId(prescriptionDTO.getId() + i);
+                m.setName(f.getMedecine());
+                m.setDuration(Long.valueOf(f.getDuration()));
+                m.setFrequency(Double.valueOf(f.getFrequency()));
+                s.add(m);
+            }
+        }
+
+        return s;
+    }
+
+    public PrescriptionDTO saveBis(PrescriptionDTO prescriptionDTO) {
+
+        log.debug("Request to save Prescription : {}", prescriptionDTO);
+        Prescription prescription = map(prescriptionDTO);
+        log.debug("VALUES : {}", prescription);
+        log.debug("FORM : {}", prescription.getMedecines());
+        //prescription = prescriptionRepository.save(prescription);
+        //return prescriptionMapper.toDto(prescription);
+        return null;
     }
 }

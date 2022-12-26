@@ -68,6 +68,9 @@ public class HospitalisationService {
                 if (hospitalisation.getDoctorName() != null) {
                     existingHospitalisation.setDoctorName(hospitalisation.getDoctorName());
                 }
+                if (hospitalisation.getStatus() != null) {
+                    existingHospitalisation.setStatus(hospitalisation.getStatus());
+                }
 
                 return existingHospitalisation;
             })

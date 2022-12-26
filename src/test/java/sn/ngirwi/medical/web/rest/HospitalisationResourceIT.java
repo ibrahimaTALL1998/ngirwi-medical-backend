@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.IntegrationTest;
 import sn.ngirwi.medical.domain.Hospitalisation;
+import sn.ngirwi.medical.domain.enumeration.HospitalisationStatus;
 import sn.ngirwi.medical.repository.HospitalisationRepository;
 
 /**
@@ -39,6 +40,9 @@ class HospitalisationResourceIT {
 
     private static final String DEFAULT_DOCTOR_NAME = "AAAAAAAAAA";
     private static final String UPDATED_DOCTOR_NAME = "BBBBBBBBBB";
+
+    private static final HospitalisationStatus DEFAULT_STATUS = HospitalisationStatus.STARTED;
+    private static final HospitalisationStatus UPDATED_STATUS = HospitalisationStatus.ONGOING;
 
     private static final String ENTITY_API_URL = "/api/hospitalisations";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -67,7 +71,8 @@ class HospitalisationResourceIT {
         Hospitalisation hospitalisation = new Hospitalisation()
             .entryDate(DEFAULT_ENTRY_DATE)
             .releaseDate(DEFAULT_RELEASE_DATE)
-            .doctorName(DEFAULT_DOCTOR_NAME);
+            .doctorName(DEFAULT_DOCTOR_NAME)
+            .status(DEFAULT_STATUS);
         return hospitalisation;
     }
 
@@ -81,7 +86,8 @@ class HospitalisationResourceIT {
         Hospitalisation hospitalisation = new Hospitalisation()
             .entryDate(UPDATED_ENTRY_DATE)
             .releaseDate(UPDATED_RELEASE_DATE)
-            .doctorName(UPDATED_DOCTOR_NAME);
+            .doctorName(UPDATED_DOCTOR_NAME)
+            .status(UPDATED_STATUS);
         return hospitalisation;
     }
 
@@ -108,6 +114,7 @@ class HospitalisationResourceIT {
         assertThat(testHospitalisation.getEntryDate()).isEqualTo(DEFAULT_ENTRY_DATE);
         assertThat(testHospitalisation.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
         assertThat(testHospitalisation.getDoctorName()).isEqualTo(DEFAULT_DOCTOR_NAME);
+        assertThat(testHospitalisation.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -144,7 +151,8 @@ class HospitalisationResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(hospitalisation.getId().intValue())))
             .andExpect(jsonPath("$.[*].entryDate").value(hasItem(DEFAULT_ENTRY_DATE.toString())))
             .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
-            .andExpect(jsonPath("$.[*].doctorName").value(hasItem(DEFAULT_DOCTOR_NAME)));
+            .andExpect(jsonPath("$.[*].doctorName").value(hasItem(DEFAULT_DOCTOR_NAME)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
 
     @Test
@@ -161,7 +169,8 @@ class HospitalisationResourceIT {
             .andExpect(jsonPath("$.id").value(hospitalisation.getId().intValue()))
             .andExpect(jsonPath("$.entryDate").value(DEFAULT_ENTRY_DATE.toString()))
             .andExpect(jsonPath("$.releaseDate").value(DEFAULT_RELEASE_DATE.toString()))
-            .andExpect(jsonPath("$.doctorName").value(DEFAULT_DOCTOR_NAME));
+            .andExpect(jsonPath("$.doctorName").value(DEFAULT_DOCTOR_NAME))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -183,7 +192,11 @@ class HospitalisationResourceIT {
         Hospitalisation updatedHospitalisation = hospitalisationRepository.findById(hospitalisation.getId()).get();
         // Disconnect from session so that the updates on updatedHospitalisation are not directly saved in db
         em.detach(updatedHospitalisation);
-        updatedHospitalisation.entryDate(UPDATED_ENTRY_DATE).releaseDate(UPDATED_RELEASE_DATE).doctorName(UPDATED_DOCTOR_NAME);
+        updatedHospitalisation
+            .entryDate(UPDATED_ENTRY_DATE)
+            .releaseDate(UPDATED_RELEASE_DATE)
+            .doctorName(UPDATED_DOCTOR_NAME)
+            .status(UPDATED_STATUS);
 
         restHospitalisationMockMvc
             .perform(
@@ -200,6 +213,7 @@ class HospitalisationResourceIT {
         assertThat(testHospitalisation.getEntryDate()).isEqualTo(UPDATED_ENTRY_DATE);
         assertThat(testHospitalisation.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testHospitalisation.getDoctorName()).isEqualTo(UPDATED_DOCTOR_NAME);
+        assertThat(testHospitalisation.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test
@@ -289,6 +303,7 @@ class HospitalisationResourceIT {
         assertThat(testHospitalisation.getEntryDate()).isEqualTo(UPDATED_ENTRY_DATE);
         assertThat(testHospitalisation.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testHospitalisation.getDoctorName()).isEqualTo(UPDATED_DOCTOR_NAME);
+        assertThat(testHospitalisation.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -303,7 +318,11 @@ class HospitalisationResourceIT {
         Hospitalisation partialUpdatedHospitalisation = new Hospitalisation();
         partialUpdatedHospitalisation.setId(hospitalisation.getId());
 
-        partialUpdatedHospitalisation.entryDate(UPDATED_ENTRY_DATE).releaseDate(UPDATED_RELEASE_DATE).doctorName(UPDATED_DOCTOR_NAME);
+        partialUpdatedHospitalisation
+            .entryDate(UPDATED_ENTRY_DATE)
+            .releaseDate(UPDATED_RELEASE_DATE)
+            .doctorName(UPDATED_DOCTOR_NAME)
+            .status(UPDATED_STATUS);
 
         restHospitalisationMockMvc
             .perform(
@@ -320,6 +339,7 @@ class HospitalisationResourceIT {
         assertThat(testHospitalisation.getEntryDate()).isEqualTo(UPDATED_ENTRY_DATE);
         assertThat(testHospitalisation.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testHospitalisation.getDoctorName()).isEqualTo(UPDATED_DOCTOR_NAME);
+        assertThat(testHospitalisation.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test

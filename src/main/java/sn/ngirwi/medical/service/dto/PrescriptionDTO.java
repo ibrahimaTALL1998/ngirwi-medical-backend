@@ -1,8 +1,12 @@
 package sn.ngirwi.medical.service.dto;
 
+import sn.ngirwi.medical.service.model.PrescriptionForm;
+
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link sn.ngirwi.medical.domain.Prescription} entity.
@@ -17,6 +21,8 @@ public class PrescriptionDTO implements Serializable {
     private String author;
 
     private ConsultationDTO consultation;
+
+    private Set<PrescriptionForm> form;
 
     public Long getId() {
         return id;
@@ -50,6 +56,14 @@ public class PrescriptionDTO implements Serializable {
         this.consultation = consultation;
     }
 
+    public Set<PrescriptionForm> getForm() {
+        return form;
+    }
+
+    public void setForm(Set<PrescriptionForm> form) {
+        this.form = form;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -71,14 +85,14 @@ public class PrescriptionDTO implements Serializable {
         return Objects.hash(this.id);
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
         return "PrescriptionDTO{" +
-            "id=" + getId() +
-            ", creationDate='" + getCreationDate() + "'" +
-            ", author='" + getAuthor() + "'" +
-            ", consultation=" + getConsultation() +
-            "}";
+            "id=" + id +
+            ", creationDate=" + creationDate +
+            ", author='" + author + '\'' +
+            ", consultation=" + consultation +
+            ", form=" + form +
+            '}';
     }
 }

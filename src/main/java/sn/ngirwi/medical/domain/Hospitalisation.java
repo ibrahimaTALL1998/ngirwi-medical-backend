@@ -6,6 +6,7 @@ import java.time.Instant;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import sn.ngirwi.medical.domain.enumeration.HospitalisationStatus;
 
 /**
  * A Hospitalisation.
@@ -32,6 +33,10 @@ public class Hospitalisation implements Serializable {
 
     @Column(name = "doctor_name")
     private String doctorName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private HospitalisationStatus status;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "dossierMedical", "consultations" }, allowSetters = true)
@@ -91,6 +96,19 @@ public class Hospitalisation implements Serializable {
         this.doctorName = doctorName;
     }
 
+    public HospitalisationStatus getStatus() {
+        return this.status;
+    }
+
+    public Hospitalisation status(HospitalisationStatus status) {
+        this.setStatus(status);
+        return this;
+    }
+
+    public void setStatus(HospitalisationStatus status) {
+        this.status = status;
+    }
+
     public Patient getPatient() {
         return this.patient;
     }
@@ -131,6 +149,7 @@ public class Hospitalisation implements Serializable {
             ", entryDate='" + getEntryDate() + "'" +
             ", releaseDate='" + getReleaseDate() + "'" +
             ", doctorName='" + getDoctorName() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

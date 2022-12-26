@@ -24,6 +24,8 @@
     <include file="config/liquibase/changelog/20220910204516_added_entity_Medecine.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220910204517_added_entity_Bill.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220910204518_added_entity_BillElement.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221208153441_added_entity_Hospitalisation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221208154112_added_entity_SurveillanceSheet.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20220910204513_added_entity_constraints_DossierMedical.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220910204514_added_entity_constraints_Consultation.xml" relativeToChangelogFile="false"/>
@@ -31,6 +33,8 @@
     <include file="config/liquibase/changelog/20220910204516_added_entity_constraints_Medecine.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220910204517_added_entity_constraints_Bill.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220910204518_added_entity_constraints_BillElement.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221208153441_added_entity_constraints_Hospitalisation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221208154112_added_entity_constraints_SurveillanceSheet.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>
