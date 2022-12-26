@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,12 @@ public class SurveillanceSheetService {
     public Page<SurveillanceSheet> findAll(Pageable pageable) {
         log.debug("Request to get all SurveillanceSheets");
         return surveillanceSheetRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SurveillanceSheet> findAllPatient( Long id) {
+        log.debug("Request to get all SurveillanceSheets");
+        return surveillanceSheetRepository.findByHospitalisation_Id(id);
     }
 
     /**
