@@ -3,6 +3,7 @@ package sn.ngirwi.medical.repository;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 import sn.ngirwi.medical.domain.Hospitalisation;
+import sn.ngirwi.medical.domain.Patient;
 import sn.ngirwi.medical.domain.enumeration.HospitalisationStatus;
 
 import java.util.Optional;
@@ -15,5 +16,9 @@ import java.util.Optional;
 public interface HospitalisationRepository extends JpaRepository<Hospitalisation, Long> {
     Optional<Hospitalisation> findByPatient_Id(Long id);
 
-    Optional<Hospitalisation> findByPatient_IdAndStatus(Long id, HospitalisationStatus status);
+    Optional<Hospitalisation> findFirstByPatient_IdAndStatus(Long id, HospitalisationStatus status);
+
+    // Optional<Hospitalisation> findByPatient_IdAndStatus(Long id, HospitalisationStatus status);
+
+
 }

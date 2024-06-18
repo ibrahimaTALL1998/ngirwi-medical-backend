@@ -155,6 +155,6 @@ public class HospitalisationService {
 
     public Optional<Hospitalisation> findPatient(Long id) {
         log.debug("Request to get Hospitalisation in progress for specific patient: {}", id);
-        return hospitalisationRepository.findByPatient_IdAndStatus(id, HospitalisationStatus.STARTED);
+        return hospitalisationRepository.findFirstByPatient_IdAndStatus(id, HospitalisationStatus.STARTED);
     }
 }
