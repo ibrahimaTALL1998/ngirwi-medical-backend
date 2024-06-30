@@ -68,13 +68,16 @@ public class PrescriptionResource {
     }
 
     @PostMapping("/prescriptionsbis")
-    public void createPrescriptionBis(@RequestBody PrescriptionDTO prescriptionDTO) throws URISyntaxException {
+    public ResponseEntity<PrescriptionDTO> createPrescriptionBis(@RequestBody PrescriptionDTO prescriptionDTO) throws URISyntaxException {
         log.debug("REST request to save Prescription with Form: {}", prescriptionDTO);
         if (prescriptionDTO.getId() != null) {
             throw new BadRequestAlertException("A new prescription cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PrescriptionDTO result = prescriptionService.saveBis(prescriptionDTO);
-
+        return ResponseEntity
+            .created(new URI("/api/prescriptions/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**
@@ -104,7 +107,8 @@ public class PrescriptionResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        PrescriptionDTO result = prescriptionService.update(prescriptionDTO);
+        //PrescriptionDTO result = prescriptionService.update(prescriptionDTO);
+        PrescriptionDTO result = prescriptionService.updateBis(prescriptionDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, prescriptionDTO.getId().toString()))

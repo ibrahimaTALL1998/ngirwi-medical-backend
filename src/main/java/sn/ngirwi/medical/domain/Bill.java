@@ -32,7 +32,7 @@ public class Bill implements Serializable {
     @Column(name = "author")
     private String author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "dossierMedical", "consultations" }, allowSetters = true)
     private Patient patient;
 

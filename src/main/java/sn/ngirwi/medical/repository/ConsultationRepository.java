@@ -13,7 +13,7 @@ import sn.ngirwi.medical.domain.Consultation;
  * Spring Data JPA repository for the Consultation entity.
  */
 @Repository
-public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
+public interface  ConsultationRepository extends JpaRepository<Consultation, Long> {
     default Optional<Consultation> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }

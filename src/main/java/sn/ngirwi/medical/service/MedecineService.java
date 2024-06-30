@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,12 @@ public class MedecineService {
     public Page<MedecineDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Medecines");
         return medecineRepository.findAll(pageable).map(medecineMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MedecineDTO> findAll(Long id) {
+        log.debug("Request to get all Medecines");
+        return medecineMapper.toDto(medecineRepository.findByOrdonance_Id(id));
     }
 
     /**
