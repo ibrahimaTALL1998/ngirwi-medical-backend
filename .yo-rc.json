@@ -27,14 +27,15 @@
       "Bill",
       "BillElement",
       "Hospitalisation",
-      "SurveillanceSheet"
+      "SurveillanceSheet",
+      "Hospital"
     ],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.9.3",
     "jwtSecretKey": "NTExYTZhOWU1NjgzNDZhODk5YTc5OTcyYjAyMGFjNjU1ODFmOGQ2NzQ1MDI1ZDRhZTEyM2FiZWQzODcwMTY0YWY2MjRhODI5ODRmYmUxNTBiZGNiOGQ4MzBiYzgyNWY1YWU0MzlmODg0MmRlOTk5OTMyMjk5NzU1MjEwMmE3N2I=",
     "languages": ["en", "fr"],
-    "lastLiquibaseTimestamp": 1670514072000,
+    "lastLiquibaseTimestamp": 1720115530000,
     "messageBroker": false,
     "microfrontend": false,
     "microfrontends": [],
