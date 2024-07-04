@@ -151,6 +151,12 @@ public class BillElementResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/bill-elements/bill/{id}")
+    public List<BillElementDTO> getAllBillElements(@PathVariable Long id) {
+        log.debug("REST request to get a page of BillElements");
+        return  billElementService.findAll(id);
+    }
+
     /**
      * {@code GET  /bill-elements/:id} : get the "id" billElement.
      *

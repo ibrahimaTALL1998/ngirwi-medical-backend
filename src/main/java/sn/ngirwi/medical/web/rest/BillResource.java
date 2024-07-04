@@ -60,7 +60,7 @@ public class BillResource {
         if (billDTO.getId() != null) {
             throw new BadRequestAlertException("A new bill cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        BillDTO result = billService.save(billDTO);
+        BillDTO result = billService.saveBis(billDTO);
         return ResponseEntity
             .created(new URI("/api/bills/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))

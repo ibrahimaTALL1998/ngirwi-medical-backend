@@ -15,7 +15,7 @@ public interface DossierMedicalMapper extends EntityMapper<DossierMedicalDTO, Do
     DossierMedicalDTO toDto(DossierMedical s);
 
     @Named("patientId")
-    @BeanMapping(ignoreByDefault = true)
+    //@BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     PatientDTO toDtoPatientId(Patient patient);
 }

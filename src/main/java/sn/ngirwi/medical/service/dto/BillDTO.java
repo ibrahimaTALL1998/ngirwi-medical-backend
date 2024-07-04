@@ -1,8 +1,12 @@
 package sn.ngirwi.medical.service.dto;
 
+import sn.ngirwi.medical.domain.BillElement;
+import sn.ngirwi.medical.service.model.PrescriptionForm;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link sn.ngirwi.medical.domain.Bill} entity.
@@ -17,6 +21,8 @@ public class BillDTO implements Serializable {
     private String author;
 
     private PatientDTO patient;
+
+    private Set<BillElement> elements;
 
     public Long getId() {
         return id;
@@ -48,6 +54,14 @@ public class BillDTO implements Serializable {
 
     public void setPatient(PatientDTO patient) {
         this.patient = patient;
+    }
+
+    public Set<BillElement> getElements() {
+        return elements;
+    }
+
+    public void setElements(Set<BillElement> elements) {
+        this.elements = elements;
     }
 
     @Override

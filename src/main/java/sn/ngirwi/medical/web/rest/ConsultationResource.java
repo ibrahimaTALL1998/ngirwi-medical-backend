@@ -16,9 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.repository.ConsultationRepository;
+import sn.ngirwi.medical.security.AuthoritiesConstants;
 import sn.ngirwi.medical.service.ConsultationService;
 import sn.ngirwi.medical.service.dto.ConsultationDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
@@ -58,6 +60,7 @@ public class ConsultationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/consultations")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.DOCTOR + "\")")
     public ResponseEntity<ConsultationDTO> createConsultation(@Valid @RequestBody ConsultationDTO consultationDTO)
         throws URISyntaxException {
         log.debug("REST request to save Consultation : {}", consultationDTO);
@@ -82,6 +85,7 @@ public class ConsultationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/consultations/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.DOCTOR + "\")")
     public ResponseEntity<ConsultationDTO> updateConsultation(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ConsultationDTO consultationDTO

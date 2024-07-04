@@ -11,7 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sn.ngirwi.medical.domain.DossierMedical;
 import sn.ngirwi.medical.domain.Patient;
+import sn.ngirwi.medical.repository.DossierMedicalRepository;
 import sn.ngirwi.medical.repository.PatientRepository;
 import sn.ngirwi.medical.service.dto.PatientDTO;
 import sn.ngirwi.medical.service.mapper.PatientMapper;
@@ -28,10 +30,12 @@ public class PatientService {
     private final PatientRepository patientRepository;
 
     private final PatientMapper patientMapper;
+    private final DossierMedicalRepository dossierMedicalRepository;
 
-    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper) {
+    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper, DossierMedicalRepository dossierMedicalRepository) {
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
+        this.dossierMedicalRepository = dossierMedicalRepository;
     }
 
     /**
@@ -125,6 +129,7 @@ public class PatientService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Patient : {}", id);
+        dossierMedicalRepository.deleteByPatient_Id(id);
         patientRepository.deleteById(id);
     }
 }

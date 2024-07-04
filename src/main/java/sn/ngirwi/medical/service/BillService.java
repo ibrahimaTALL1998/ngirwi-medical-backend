@@ -1,16 +1,22 @@
 package sn.ngirwi.medical.service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sn.ngirwi.medical.domain.Bill;
+import sn.ngirwi.medical.domain.*;
+import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.repository.BillRepository;
 import sn.ngirwi.medical.service.dto.BillDTO;
+import sn.ngirwi.medical.service.mapper.BillElementMapper;
 import sn.ngirwi.medical.service.mapper.BillMapper;
+import sn.ngirwi.medical.service.mapper.PatientMapper;
 
 /**
  * Service Implementation for managing {@link Bill}.
@@ -25,9 +31,15 @@ public class BillService {
 
     private final BillMapper billMapper;
 
-    public BillService(BillRepository billRepository, BillMapper billMapper) {
+    private final PatientMapper patientMapper;
+
+    private final BillElementRepository billElementRepository;
+
+    public BillService(BillRepository billRepository, BillMapper billMapper, PatientMapper patientMapper, BillElementMapper billElementMapper, BillElementRepository billElementRepository) {
         this.billRepository = billRepository;
         this.billMapper = billMapper;
+        this.patientMapper = patientMapper;
+        this.billElementRepository = billElementRepository;
     }
 
     /**
@@ -43,6 +55,55 @@ public class BillService {
         return billMapper.toDto(bill);
     }
 
+
+    public BillDTO saveBis(BillDTO billDTO) {
+        log.debug("Request to save Bill : {}", billDTO);
+        Bill bill = billMapper.toEntity(billDTO);
+
+        //Bill bill1 = map(billDTO); // Map DTO to entity
+
+        // Assuming prescriptionDTO has medicines mapped correctly
+        for (BillElement billElement : bill.getBillElements()) {
+            billElement.setBill(bill); // Associate medicine with prescription
+            // Remove manual save if cascade persist is configured
+            billElementRepository.save(billElement); // Remove this line if cascade persist is configured
+        }
+
+        // Save prescription (and associated medicines if cascade persist is configured)
+        bill = billRepository.save(bill);
+
+        return billMapper.toDto(bill);
+    }
+
+    public Bill map(BillDTO billDTO) {
+        Bill p = new Bill();
+        //p.setId(prescriptionDTO.getId());
+        p.setAuthor(billDTO.getAuthor());
+        //p.se(prescriptionDTO.getCreationDate());
+        Patient pa = patientMapper.toEntity(billDTO.getPatient());
+        p.setPatient(pa);
+        Set<BillElement> elements = billElementMapper(billDTO);
+        for (BillElement m : elements){
+            m.setBill(p);
+        }
+        p.setBillElements(elements);
+        return p;
+    }
+
+    public Set<BillElement> billElementMapper(BillDTO billDTO){
+        Set<BillElement> s = new HashSet<>();
+        for (int i = 0; i < billDTO.getElements().toArray().length; i++){
+            for (BillElement f : billDTO.getElements()){
+                BillElement m = new BillElement();
+                //m.setId(prescriptionDTO.getId() + i);
+                m.setName(f.getName());
+                m.setPrice(f.getPrice());
+                s.add(m);
+            }
+        }
+
+        return s;
+    }
     /**
      * Update a bill.
      *

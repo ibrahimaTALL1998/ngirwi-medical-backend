@@ -15,7 +15,7 @@ public interface PrescriptionMapper extends EntityMapper<PrescriptionDTO, Prescr
     PrescriptionDTO toDto(Prescription s);
 
     @Named("consultationId")
-    @BeanMapping(ignoreByDefault = true)
+    //@BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     ConsultationDTO toDtoConsultationId(Consultation consultation);
 }

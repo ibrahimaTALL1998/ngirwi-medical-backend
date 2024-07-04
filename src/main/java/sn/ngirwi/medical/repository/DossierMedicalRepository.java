@@ -14,4 +14,7 @@ import java.util.Optional;
 public interface DossierMedicalRepository extends JpaRepository<DossierMedical, Long> {
     Optional<DossierMedical> findByPatient_Id(Long id);
 
+    long deleteByPatient_Id(Long id);
+
+
 }
