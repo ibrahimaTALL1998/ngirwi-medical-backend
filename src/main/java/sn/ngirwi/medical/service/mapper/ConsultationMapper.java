@@ -15,7 +15,7 @@ public interface ConsultationMapper extends EntityMapper<ConsultationDTO, Consul
     ConsultationDTO toDto(Consultation s);
 
     @Named("patientLastName")
-    //@BeanMapping(ignoreByDefault = true)
+    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "lastName", source = "lastName")
     PatientDTO toDtoPatientLastName(Patient patient);
