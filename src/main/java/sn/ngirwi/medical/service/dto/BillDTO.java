@@ -1,12 +1,11 @@
 package sn.ngirwi.medical.service.dto;
 
-import sn.ngirwi.medical.domain.BillElement;
-import sn.ngirwi.medical.service.model.PrescriptionForm;
-
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Lob;
 
 /**
  * A DTO for the {@link sn.ngirwi.medical.domain.Bill} entity.
@@ -20,9 +19,18 @@ public class BillDTO implements Serializable {
 
     private String author;
 
+    private String insurance;
+
+    @Lob
+    private String desc;
+
+    private String ipm;
+
+    private BigDecimal total;
+
     private PatientDTO patient;
 
-    private Set<BillElement> elements;
+    private Set<BillElementDTO> billElements;
 
     public Long getId() {
         return id;
@@ -48,6 +56,38 @@ public class BillDTO implements Serializable {
         this.author = author;
     }
 
+    public String getInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(String insurance) {
+        this.insurance = insurance;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getIpm() {
+        return ipm;
+    }
+
+    public void setIpm(String ipm) {
+        this.ipm = ipm;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
     public PatientDTO getPatient() {
         return patient;
     }
@@ -56,12 +96,12 @@ public class BillDTO implements Serializable {
         this.patient = patient;
     }
 
-    public Set<BillElement> getElements() {
-        return elements;
+    public Set<BillElementDTO> getBillElements() {
+        return billElements;
     }
 
-    public void setElements(Set<BillElement> elements) {
-        this.elements = elements;
+    public void setBillElements(Set<BillElementDTO> billElements) {
+        this.billElements = billElements;
     }
 
     @Override
@@ -85,14 +125,18 @@ public class BillDTO implements Serializable {
         return Objects.hash(this.id);
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
         return "BillDTO{" +
-            "id=" + getId() +
-            ", date='" + getDate() + "'" +
-            ", author='" + getAuthor() + "'" +
-            ", patient=" + getPatient() +
-            "}";
+            "id=" + id +
+            ", date=" + date +
+            ", author='" + author + '\'' +
+            ", insurance='" + insurance + '\'' +
+            ", desc='" + desc + '\'' +
+            ", ipm='" + ipm + '\'' +
+            ", total=" + total +
+            ", patient=" + patient +
+            ", elements=" + billElements +
+            '}';
     }
 }

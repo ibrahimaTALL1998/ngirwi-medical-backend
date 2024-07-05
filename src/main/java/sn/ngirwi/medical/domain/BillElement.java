@@ -29,6 +29,12 @@ public class BillElement implements Serializable {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "percentage")
+    private Double percentage;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
     @ManyToOne
     @JsonIgnoreProperties(value = { "patient", "billElements" }, allowSetters = true)
     private Bill bill;
@@ -74,6 +80,32 @@ public class BillElement implements Serializable {
         this.price = price;
     }
 
+    public Double getPercentage() {
+        return this.percentage;
+    }
+
+    public BillElement percentage(Double percentage) {
+        this.setPercentage(percentage);
+        return this;
+    }
+
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
+    }
+
+    public Integer getQuantity() {
+        return this.quantity;
+    }
+
+    public BillElement quantity(Integer quantity) {
+        this.setQuantity(quantity);
+        return this;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public Bill getBill() {
         return this.bill;
     }
@@ -113,6 +145,8 @@ public class BillElement implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", price=" + getPrice() +
+            ", percentage=" + getPercentage() +
+            ", quantity=" + getQuantity() +
             "}";
     }
 }

@@ -20,6 +20,12 @@
             <column name="price" type="double">
                 <constraints nullable="true" />
             </column>
+            <column name="percentage" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="true" />
+            </column>
             <column name="bill_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -46,6 +52,8 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="price" type="numeric"/>
+            <column name="percentage" type="numeric"/>
+            <column name="quantity" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

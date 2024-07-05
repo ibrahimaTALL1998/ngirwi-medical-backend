@@ -12,6 +12,23 @@
     {
       "fieldName": "author",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "insurance",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "desc",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "ipm",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "total",
+      "fieldType": "BigDecimal"
     }
   ],
   "fluentMethods": true,

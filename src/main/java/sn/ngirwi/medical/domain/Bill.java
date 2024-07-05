@@ -2,12 +2,14 @@ package sn.ngirwi.medical.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 /**
  * A Bill.
@@ -32,7 +34,21 @@ public class Bill implements Serializable {
     @Column(name = "author")
     private String author;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "insurance")
+    private String insurance;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "jhi_desc")
+    private String desc;
+
+    @Column(name = "ipm")
+    private String ipm;
+
+    @Column(name = "total", precision = 21, scale = 2)
+    private BigDecimal total;
+
+    @ManyToOne
     @JsonIgnoreProperties(value = { "dossierMedical", "consultations" }, allowSetters = true)
     private Patient patient;
 
@@ -80,6 +96,58 @@ public class Bill implements Serializable {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getInsurance() {
+        return this.insurance;
+    }
+
+    public Bill insurance(String insurance) {
+        this.setInsurance(insurance);
+        return this;
+    }
+
+    public void setInsurance(String insurance) {
+        this.insurance = insurance;
+    }
+
+    public String getDesc() {
+        return this.desc;
+    }
+
+    public Bill desc(String desc) {
+        this.setDesc(desc);
+        return this;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getIpm() {
+        return this.ipm;
+    }
+
+    public Bill ipm(String ipm) {
+        this.setIpm(ipm);
+        return this;
+    }
+
+    public void setIpm(String ipm) {
+        this.ipm = ipm;
+    }
+
+    public BigDecimal getTotal() {
+        return this.total;
+    }
+
+    public Bill total(BigDecimal total) {
+        this.setTotal(total);
+        return this;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public Patient getPatient() {
@@ -152,6 +220,10 @@ public class Bill implements Serializable {
             "id=" + getId() +
             ", date='" + getDate() + "'" +
             ", author='" + getAuthor() + "'" +
+            ", insurance='" + getInsurance() + "'" +
+            ", desc='" + getDesc() + "'" +
+            ", ipm='" + getIpm() + "'" +
+            ", total=" + getTotal() +
             "}";
     }
 }

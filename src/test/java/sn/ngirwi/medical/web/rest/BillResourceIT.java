@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static sn.ngirwi.medical.web.rest.TestUtil.sameNumber;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import sn.ngirwi.medical.IntegrationTest;
 import sn.ngirwi.medical.domain.Bill;
 import sn.ngirwi.medical.repository.BillRepository;
@@ -38,6 +41,18 @@ class BillResourceIT {
 
     private static final String DEFAULT_AUTHOR = "AAAAAAAAAA";
     private static final String UPDATED_AUTHOR = "BBBBBBBBBB";
+
+    private static final String DEFAULT_INSURANCE = "AAAAAAAAAA";
+    private static final String UPDATED_INSURANCE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESC = "AAAAAAAAAA";
+    private static final String UPDATED_DESC = "BBBBBBBBBB";
+
+    private static final String DEFAULT_IPM = "AAAAAAAAAA";
+    private static final String UPDATED_IPM = "BBBBBBBBBB";
+
+    private static final BigDecimal DEFAULT_TOTAL = new BigDecimal(1);
+    private static final BigDecimal UPDATED_TOTAL = new BigDecimal(2);
 
     private static final String ENTITY_API_URL = "/api/bills";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -66,7 +81,13 @@ class BillResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Bill createEntity(EntityManager em) {
-        Bill bill = new Bill().date(DEFAULT_DATE).author(DEFAULT_AUTHOR);
+        Bill bill = new Bill()
+            .date(DEFAULT_DATE)
+            .author(DEFAULT_AUTHOR)
+            .insurance(DEFAULT_INSURANCE)
+            .desc(DEFAULT_DESC)
+            .ipm(DEFAULT_IPM)
+            .total(DEFAULT_TOTAL);
         return bill;
     }
 
@@ -77,7 +98,13 @@ class BillResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Bill createUpdatedEntity(EntityManager em) {
-        Bill bill = new Bill().date(UPDATED_DATE).author(UPDATED_AUTHOR);
+        Bill bill = new Bill()
+            .date(UPDATED_DATE)
+            .author(UPDATED_AUTHOR)
+            .insurance(UPDATED_INSURANCE)
+            .desc(UPDATED_DESC)
+            .ipm(UPDATED_IPM)
+            .total(UPDATED_TOTAL);
         return bill;
     }
 
@@ -102,6 +129,10 @@ class BillResourceIT {
         Bill testBill = billList.get(billList.size() - 1);
         assertThat(testBill.getDate()).isEqualTo(DEFAULT_DATE);
         assertThat(testBill.getAuthor()).isEqualTo(DEFAULT_AUTHOR);
+        assertThat(testBill.getInsurance()).isEqualTo(DEFAULT_INSURANCE);
+        assertThat(testBill.getDesc()).isEqualTo(DEFAULT_DESC);
+        assertThat(testBill.getIpm()).isEqualTo(DEFAULT_IPM);
+        assertThat(testBill.getTotal()).isEqualByComparingTo(DEFAULT_TOTAL);
     }
 
     @Test
@@ -136,7 +167,11 @@ class BillResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(bill.getId().intValue())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].author").value(hasItem(DEFAULT_AUTHOR)));
+            .andExpect(jsonPath("$.[*].author").value(hasItem(DEFAULT_AUTHOR)))
+            .andExpect(jsonPath("$.[*].insurance").value(hasItem(DEFAULT_INSURANCE)))
+            .andExpect(jsonPath("$.[*].desc").value(hasItem(DEFAULT_DESC.toString())))
+            .andExpect(jsonPath("$.[*].ipm").value(hasItem(DEFAULT_IPM)))
+            .andExpect(jsonPath("$.[*].total").value(hasItem(sameNumber(DEFAULT_TOTAL))));
     }
 
     @Test
@@ -152,7 +187,11 @@ class BillResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(bill.getId().intValue()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
-            .andExpect(jsonPath("$.author").value(DEFAULT_AUTHOR));
+            .andExpect(jsonPath("$.author").value(DEFAULT_AUTHOR))
+            .andExpect(jsonPath("$.insurance").value(DEFAULT_INSURANCE))
+            .andExpect(jsonPath("$.desc").value(DEFAULT_DESC.toString()))
+            .andExpect(jsonPath("$.ipm").value(DEFAULT_IPM))
+            .andExpect(jsonPath("$.total").value(sameNumber(DEFAULT_TOTAL)));
     }
 
     @Test
@@ -174,7 +213,13 @@ class BillResourceIT {
         Bill updatedBill = billRepository.findById(bill.getId()).get();
         // Disconnect from session so that the updates on updatedBill are not directly saved in db
         em.detach(updatedBill);
-        updatedBill.date(UPDATED_DATE).author(UPDATED_AUTHOR);
+        updatedBill
+            .date(UPDATED_DATE)
+            .author(UPDATED_AUTHOR)
+            .insurance(UPDATED_INSURANCE)
+            .desc(UPDATED_DESC)
+            .ipm(UPDATED_IPM)
+            .total(UPDATED_TOTAL);
         BillDTO billDTO = billMapper.toDto(updatedBill);
 
         restBillMockMvc
@@ -191,6 +236,10 @@ class BillResourceIT {
         Bill testBill = billList.get(billList.size() - 1);
         assertThat(testBill.getDate()).isEqualTo(UPDATED_DATE);
         assertThat(testBill.getAuthor()).isEqualTo(UPDATED_AUTHOR);
+        assertThat(testBill.getInsurance()).isEqualTo(UPDATED_INSURANCE);
+        assertThat(testBill.getDesc()).isEqualTo(UPDATED_DESC);
+        assertThat(testBill.getIpm()).isEqualTo(UPDATED_IPM);
+        assertThat(testBill.getTotal()).isEqualByComparingTo(UPDATED_TOTAL);
     }
 
     @Test
@@ -270,6 +319,8 @@ class BillResourceIT {
         Bill partialUpdatedBill = new Bill();
         partialUpdatedBill.setId(bill.getId());
 
+        partialUpdatedBill.desc(UPDATED_DESC).ipm(UPDATED_IPM).total(UPDATED_TOTAL);
+
         restBillMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedBill.getId())
@@ -284,6 +335,10 @@ class BillResourceIT {
         Bill testBill = billList.get(billList.size() - 1);
         assertThat(testBill.getDate()).isEqualTo(DEFAULT_DATE);
         assertThat(testBill.getAuthor()).isEqualTo(DEFAULT_AUTHOR);
+        assertThat(testBill.getInsurance()).isEqualTo(DEFAULT_INSURANCE);
+        assertThat(testBill.getDesc()).isEqualTo(UPDATED_DESC);
+        assertThat(testBill.getIpm()).isEqualTo(UPDATED_IPM);
+        assertThat(testBill.getTotal()).isEqualByComparingTo(UPDATED_TOTAL);
     }
 
     @Test
@@ -298,7 +353,13 @@ class BillResourceIT {
         Bill partialUpdatedBill = new Bill();
         partialUpdatedBill.setId(bill.getId());
 
-        partialUpdatedBill.date(UPDATED_DATE).author(UPDATED_AUTHOR);
+        partialUpdatedBill
+            .date(UPDATED_DATE)
+            .author(UPDATED_AUTHOR)
+            .insurance(UPDATED_INSURANCE)
+            .desc(UPDATED_DESC)
+            .ipm(UPDATED_IPM)
+            .total(UPDATED_TOTAL);
 
         restBillMockMvc
             .perform(
@@ -314,6 +375,10 @@ class BillResourceIT {
         Bill testBill = billList.get(billList.size() - 1);
         assertThat(testBill.getDate()).isEqualTo(UPDATED_DATE);
         assertThat(testBill.getAuthor()).isEqualTo(UPDATED_AUTHOR);
+        assertThat(testBill.getInsurance()).isEqualTo(UPDATED_INSURANCE);
+        assertThat(testBill.getDesc()).isEqualTo(UPDATED_DESC);
+        assertThat(testBill.getIpm()).isEqualTo(UPDATED_IPM);
+        assertThat(testBill.getTotal()).isEqualByComparingTo(UPDATED_TOTAL);
     }
 
     @Test

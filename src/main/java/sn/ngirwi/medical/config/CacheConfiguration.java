@@ -61,6 +61,7 @@ public class CacheConfiguration {
             createCache(cm, sn.ngirwi.medical.domain.Hospitalisation.class.getName());
             createCache(cm, sn.ngirwi.medical.domain.Hospitalisation.class.getName() + ".surveillanceSheet");
             createCache(cm, sn.ngirwi.medical.domain.SurveillanceSheet.class.getName());
+            createCache(cm, sn.ngirwi.medical.domain.Hospital.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

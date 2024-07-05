@@ -20,6 +20,18 @@
             <column name="author" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="insurance" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="jhi_desc" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="ipm" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="total" type="decimal(21,2)">
+                <constraints nullable="true" />
+            </column>
             <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -47,6 +59,10 @@
             <column name="id" type="numeric"/>
             <column name="date" type="date"/>
             <column name="author" type="string"/>
+            <column name="insurance" type="string"/>
+            <column name="jhi_desc" type="clob"/>
+            <column name="ipm" type="string"/>
+            <column name="total" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.BillElement;
 import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.service.dto.BillElementDTO;
+import sn.ngirwi.medical.service.dto.MedecineDTO;
 import sn.ngirwi.medical.service.mapper.BillElementMapper;
 
 /**
@@ -91,7 +92,7 @@ public class BillElementService {
 
     @Transactional(readOnly = true)
     public List<BillElementDTO> findAll(Long id) {
-        log.debug("Request to get all BillElements");
+        log.debug("Request to get all BillElemnts");
         return billElementMapper.toDto(billElementRepository.findByBill_Id(id));
     }
 

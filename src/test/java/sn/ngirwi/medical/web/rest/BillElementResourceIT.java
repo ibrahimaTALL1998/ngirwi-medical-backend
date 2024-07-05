@@ -37,6 +37,12 @@ class BillElementResourceIT {
     private static final Double DEFAULT_PRICE = 1D;
     private static final Double UPDATED_PRICE = 2D;
 
+    private static final Double DEFAULT_PERCENTAGE = 1D;
+    private static final Double UPDATED_PERCENTAGE = 2D;
+
+    private static final Integer DEFAULT_QUANTITY = 1;
+    private static final Integer UPDATED_QUANTITY = 2;
+
     private static final String ENTITY_API_URL = "/api/bill-elements";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -64,7 +70,11 @@ class BillElementResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static BillElement createEntity(EntityManager em) {
-        BillElement billElement = new BillElement().name(DEFAULT_NAME).price(DEFAULT_PRICE);
+        BillElement billElement = new BillElement()
+            .name(DEFAULT_NAME)
+            .price(DEFAULT_PRICE)
+            .percentage(DEFAULT_PERCENTAGE)
+            .quantity(DEFAULT_QUANTITY);
         return billElement;
     }
 
@@ -75,7 +85,11 @@ class BillElementResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static BillElement createUpdatedEntity(EntityManager em) {
-        BillElement billElement = new BillElement().name(UPDATED_NAME).price(UPDATED_PRICE);
+        BillElement billElement = new BillElement()
+            .name(UPDATED_NAME)
+            .price(UPDATED_PRICE)
+            .percentage(UPDATED_PERCENTAGE)
+            .quantity(UPDATED_QUANTITY);
         return billElement;
     }
 
@@ -102,6 +116,8 @@ class BillElementResourceIT {
         BillElement testBillElement = billElementList.get(billElementList.size() - 1);
         assertThat(testBillElement.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testBillElement.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testBillElement.getPercentage()).isEqualTo(DEFAULT_PERCENTAGE);
+        assertThat(testBillElement.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
     }
 
     @Test
@@ -138,7 +154,9 @@ class BillElementResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(billElement.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())));
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
+            .andExpect(jsonPath("$.[*].percentage").value(hasItem(DEFAULT_PERCENTAGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)));
     }
 
     @Test
@@ -154,7 +172,9 @@ class BillElementResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(billElement.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()));
+            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
+            .andExpect(jsonPath("$.percentage").value(DEFAULT_PERCENTAGE.doubleValue()))
+            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY));
     }
 
     @Test
@@ -176,7 +196,7 @@ class BillElementResourceIT {
         BillElement updatedBillElement = billElementRepository.findById(billElement.getId()).get();
         // Disconnect from session so that the updates on updatedBillElement are not directly saved in db
         em.detach(updatedBillElement);
-        updatedBillElement.name(UPDATED_NAME).price(UPDATED_PRICE);
+        updatedBillElement.name(UPDATED_NAME).price(UPDATED_PRICE).percentage(UPDATED_PERCENTAGE).quantity(UPDATED_QUANTITY);
         BillElementDTO billElementDTO = billElementMapper.toDto(updatedBillElement);
 
         restBillElementMockMvc
@@ -193,6 +213,8 @@ class BillElementResourceIT {
         BillElement testBillElement = billElementList.get(billElementList.size() - 1);
         assertThat(testBillElement.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBillElement.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testBillElement.getPercentage()).isEqualTo(UPDATED_PERCENTAGE);
+        assertThat(testBillElement.getQuantity()).isEqualTo(UPDATED_QUANTITY);
     }
 
     @Test
@@ -272,7 +294,7 @@ class BillElementResourceIT {
         BillElement partialUpdatedBillElement = new BillElement();
         partialUpdatedBillElement.setId(billElement.getId());
 
-        partialUpdatedBillElement.name(UPDATED_NAME);
+        partialUpdatedBillElement.name(UPDATED_NAME).percentage(UPDATED_PERCENTAGE);
 
         restBillElementMockMvc
             .perform(
@@ -288,6 +310,8 @@ class BillElementResourceIT {
         BillElement testBillElement = billElementList.get(billElementList.size() - 1);
         assertThat(testBillElement.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBillElement.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testBillElement.getPercentage()).isEqualTo(UPDATED_PERCENTAGE);
+        assertThat(testBillElement.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
     }
 
     @Test
@@ -302,7 +326,7 @@ class BillElementResourceIT {
         BillElement partialUpdatedBillElement = new BillElement();
         partialUpdatedBillElement.setId(billElement.getId());
 
-        partialUpdatedBillElement.name(UPDATED_NAME).price(UPDATED_PRICE);
+        partialUpdatedBillElement.name(UPDATED_NAME).price(UPDATED_PRICE).percentage(UPDATED_PERCENTAGE).quantity(UPDATED_QUANTITY);
 
         restBillElementMockMvc
             .perform(
@@ -318,6 +342,8 @@ class BillElementResourceIT {
         BillElement testBillElement = billElementList.get(billElementList.size() - 1);
         assertThat(testBillElement.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBillElement.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testBillElement.getPercentage()).isEqualTo(UPDATED_PERCENTAGE);
+        assertThat(testBillElement.getQuantity()).isEqualTo(UPDATED_QUANTITY);
     }
 
     @Test

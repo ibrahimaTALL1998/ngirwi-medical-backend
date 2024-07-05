@@ -15,12 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import sn.ngirwi.medical.domain.Bill;
 import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.service.BillElementService;
 import sn.ngirwi.medical.service.dto.BillElementDTO;
+import sn.ngirwi.medical.service.dto.MedecineDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
-//import tech.jhipster.web.util.HeaderUtil;
-import sn.ngirwi.medical.utils.HeaderUtil;
+import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -151,12 +152,6 @@ public class BillElementResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @GetMapping("/bill-elements/bill/{id}")
-    public List<BillElementDTO> getAllBillElements(@PathVariable Long id) {
-        log.debug("REST request to get a page of BillElements");
-        return  billElementService.findAll(id);
-    }
-
     /**
      * {@code GET  /bill-elements/:id} : get the "id" billElement.
      *
@@ -184,5 +179,11 @@ public class BillElementResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/bill-elements/bill/{id}")
+    public List<BillElementDTO> getAllElementsByBillID(@PathVariable Long id) {
+        log.debug("REST request to get all lines for a specific bill");
+        return billElementService.findAll(id);
     }
 }

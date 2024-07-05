@@ -15,6 +15,10 @@ public class BillElementDTO implements Serializable {
 
     private Double price;
 
+    private Double percentage;
+
+    private Integer quantity;
+
     private BillDTO bill;
 
     public Long getId() {
@@ -39,6 +43,22 @@ public class BillElementDTO implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Double getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public BillDTO getBill() {
@@ -77,6 +97,8 @@ public class BillElementDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", price=" + getPrice() +
+            ", percentage=" + getPercentage() +
+            ", quantity=" + getQuantity() +
             ", bill=" + getBill() +
             "}";
     }

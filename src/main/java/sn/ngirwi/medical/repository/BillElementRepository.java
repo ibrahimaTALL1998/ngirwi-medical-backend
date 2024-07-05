@@ -14,5 +14,12 @@ import java.util.List;
 public interface BillElementRepository extends JpaRepository<BillElement, Long> {
     List<BillElement> findByBill_Id(Long id);
 
+    boolean existsByNameAndPriceAndPercentageAndQuantityAndBill_Id(String name, Double price, Double percentage, Integer quantity, Long id);
+
+    long deleteByNameAndPriceAndPercentageAndQuantityAndBill_Id(String name, Double price, Double percentage, Integer quantity, Long id);
+
+
+
+
 
 }
