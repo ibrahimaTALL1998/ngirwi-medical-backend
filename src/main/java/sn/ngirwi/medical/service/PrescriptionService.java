@@ -1,9 +1,6 @@
 package sn.ngirwi.medical.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sn.ngirwi.medical.domain.Consultation;
-import sn.ngirwi.medical.domain.Medecine;
-import sn.ngirwi.medical.domain.Patient;
-import sn.ngirwi.medical.domain.Prescription;
+import sn.ngirwi.medical.domain.*;
 import sn.ngirwi.medical.repository.MedecineRepository;
 import sn.ngirwi.medical.repository.PrescriptionRepository;
-import sn.ngirwi.medical.service.dto.MedecineDTO;
+import sn.ngirwi.medical.repository.UserRepository;
 import sn.ngirwi.medical.service.dto.PrescriptionDTO;
 import sn.ngirwi.medical.service.mapper.ConsultationMapper;
 import sn.ngirwi.medical.service.mapper.PrescriptionMapper;
@@ -35,15 +29,17 @@ public class PrescriptionService {
     private final PrescriptionRepository prescriptionRepository;
 
     private final PrescriptionMapper prescriptionMapper;
+    private final UserRepository userRepository;
 
     private final ConsultationMapper consultationMapper;
 
     private final MedecineRepository medecineRepository;
 
 
-    public PrescriptionService(PrescriptionRepository prescriptionRepository, PrescriptionMapper prescriptionMapper, ConsultationMapper consultationMapper, MedecineRepository medecineRepository) {
+    public PrescriptionService(PrescriptionRepository prescriptionRepository, PrescriptionMapper prescriptionMapper, UserRepository userRepository, ConsultationMapper consultationMapper, MedecineRepository medecineRepository) {
         this.prescriptionRepository = prescriptionRepository;
         this.prescriptionMapper = prescriptionMapper;
+        this.userRepository = userRepository;
         this.consultationMapper = consultationMapper;
         this.medecineRepository = medecineRepository;
     }
@@ -104,6 +100,20 @@ public class PrescriptionService {
     public Page<PrescriptionDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Prescriptions");
         return prescriptionRepository.findAll(pageable).map(prescriptionMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PrescriptionDTO> findAll(Pageable pageable, Long id) {
+        log.debug("Request to get all prescriptions by hospital " + id );
+        List<User> users = userRepository.findByHospitalId(id);
+        List<String> logins = new ArrayList<>();
+        if (users.size() > 0){
+            for (User user : users) {
+                log.debug(user.toString());
+                logins.add(user.getLogin());
+            }
+        }
+        return prescriptionRepository.findByAuthorIn(logins, pageable).map(prescriptionMapper::toDto);
     }
 
     /**

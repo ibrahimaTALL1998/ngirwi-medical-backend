@@ -161,6 +161,14 @@ public class BillResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/billsbis/{id}")
+    public ResponseEntity<List<BillDTO>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @PathVariable Long id) {
+        log.debug("REST request to get a page of Bills " + id);
+        Page<BillDTO> page = billService.findAll(pageable, id);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
     /**
      * {@code GET  /bills/:id} : get the "id" bill.
      *

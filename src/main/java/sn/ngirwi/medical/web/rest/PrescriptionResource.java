@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.repository.PrescriptionRepository;
@@ -161,6 +162,14 @@ public class PrescriptionResource {
     public ResponseEntity<List<PrescriptionDTO>> getAllPrescriptions(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Prescriptions");
         Page<PrescriptionDTO> page = prescriptionService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/prescriptionsbis/{id}")
+    public ResponseEntity<List<PrescriptionDTO>> getAllPrescriptions(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @PathVariable Long id) {
+        log.debug("REST request to get a page of Prescriptions " + id);
+        Page<PrescriptionDTO> page = prescriptionService.findAll(pageable, id);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

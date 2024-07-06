@@ -14,10 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.domain.DossierMedical;
 import sn.ngirwi.medical.repository.DossierMedicalRepository;
+import sn.ngirwi.medical.security.AuthoritiesConstants;
 import sn.ngirwi.medical.service.DossierMedicalService;
 import sn.ngirwi.medical.service.dto.DossierMedicalDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
@@ -31,6 +33,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.DOCTOR + "\")")
 public class DossierMedicalResource {
 
     private final Logger log = LoggerFactory.getLogger(DossierMedicalResource.class);

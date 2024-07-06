@@ -13,10 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.domain.Hospitalisation;
 import sn.ngirwi.medical.repository.HospitalisationRepository;
+import sn.ngirwi.medical.security.AuthoritiesConstants;
 import sn.ngirwi.medical.service.HospitalisationService;
 import sn.ngirwi.medical.service.model.HospitalisationForm;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
@@ -29,6 +31,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.DOCTOR + "\")")
 public class HospitalisationResource {
 
     private final Logger log = LoggerFactory.getLogger(HospitalisationResource.class);

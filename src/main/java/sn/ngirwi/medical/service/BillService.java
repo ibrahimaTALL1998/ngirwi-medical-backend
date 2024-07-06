@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.Bill;
 import sn.ngirwi.medical.domain.BillElement;
+import sn.ngirwi.medical.domain.User;
 import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.repository.BillRepository;
+import sn.ngirwi.medical.repository.UserRepository;
 import sn.ngirwi.medical.service.dto.BillDTO;
 import sn.ngirwi.medical.service.dto.BillElementDTO;
 import sn.ngirwi.medical.service.mapper.BillElementMapper;
@@ -30,13 +32,16 @@ public class BillService {
 
     private final BillElementRepository billElementRepository;
 
+    private final UserRepository userRepository;
+
     private final BillMapper billMapper;
 
     private final BillElementMapper billElementMapper;
 
-    public BillService(BillRepository billRepository, BillElementRepository billElementRepository, BillMapper billMapper, BillElementMapper billElementMapper) {
+    public BillService(BillRepository billRepository, BillElementRepository billElementRepository, UserRepository userRepository, BillMapper billMapper, BillElementMapper billElementMapper) {
         this.billRepository = billRepository;
         this.billElementRepository = billElementRepository;
+        this.userRepository = userRepository;
         this.billMapper = billMapper;
         this.billElementMapper = billElementMapper;
     }
@@ -164,6 +169,20 @@ public class BillService {
     public Page<BillDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Bills");
         return billRepository.findAll(pageable).map(billMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BillDTO> findAll(Pageable pageable, Long id) {
+        log.debug("Request to get all bills by hospital " + id );
+        List<User> users = userRepository.findByHospitalId(id);
+        List<String> logins = new ArrayList<>();
+        if (users.size() > 0){
+            for (User user : users) {
+                log.debug(user.toString());
+                logins.add(user.getLogin());
+            }
+        }
+        return billRepository.findByAuthorIn(logins, pageable).map(billMapper::toDto);
     }
 
     /**

@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.Consultation;
+import sn.ngirwi.medical.domain.User;
 import sn.ngirwi.medical.repository.ConsultationRepository;
+import sn.ngirwi.medical.repository.UserRepository;
 import sn.ngirwi.medical.service.dto.ConsultationDTO;
 import sn.ngirwi.medical.service.mapper.ConsultationMapper;
 
@@ -28,10 +31,12 @@ public class ConsultationService {
     private final ConsultationRepository consultationRepository;
 
     private final ConsultationMapper consultationMapper;
+    private final UserRepository userRepository;
 
-    public ConsultationService(ConsultationRepository consultationRepository, ConsultationMapper consultationMapper) {
+    public ConsultationService(ConsultationRepository consultationRepository, ConsultationMapper consultationMapper, UserRepository userRepository) {
         this.consultationRepository = consultationRepository;
         this.consultationMapper = consultationMapper;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -90,6 +95,20 @@ public class ConsultationService {
     public Page<ConsultationDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Consultations");
         return consultationRepository.findAll(pageable).map(consultationMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ConsultationDTO> findAll(Pageable pageable, Long id) {
+        log.debug("Request to get all Consultations by hospital " + id );
+        List<User> users = userRepository.findByHospitalId(id);
+        List<String> logins = new ArrayList<>();
+        if (users.size() > 0){
+            for (User user : users) {
+                log.debug(user.toString());
+                logins.add(user.getLogin());
+            }
+        }
+        return consultationRepository.findByAuthorIn(logins, pageable).map(consultationMapper::toDto);
     }
 
     /**
