@@ -162,6 +162,21 @@ public class PatientResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/patientsbis/{id}")
+    public ResponseEntity<List<PatientDTO>> getAllPatientsBis(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false) String filter, @PathVariable Long id
+    ) {
+        if ("dossiermedical-is-null".equals(filter)) {
+            log.debug("REST request to get all Patients where dossierMedical is null");
+            return new ResponseEntity<>(patientService.findAllWhereDossierMedicalIsNull(), HttpStatus.OK);
+        }
+        log.debug("REST request to get a page of Patients");
+        Page<PatientDTO> page = patientService.findAll(pageable, id);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
     /**
      * {@code GET  /patients/:id} : get the "id" patient.
      *

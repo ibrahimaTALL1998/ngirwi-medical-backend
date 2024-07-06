@@ -156,7 +156,7 @@ public class SurveillanceSheetResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @GetMapping("/surveillance-sheets-patient")
+    @GetMapping("/surveillance-sheets-patient/{id}")
     public ResponseEntity<List<SurveillanceSheet>> getAllSurveillanceSheetsPatient(@PathVariable Long id
     ) {
         log.debug("REST request to get a page of SurveillanceSheets of patient");

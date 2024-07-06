@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sn.ngirwi.medical.domain.DossierMedical;
 import sn.ngirwi.medical.domain.Patient;
+import sn.ngirwi.medical.domain.User;
 import sn.ngirwi.medical.repository.DossierMedicalRepository;
 import sn.ngirwi.medical.repository.PatientRepository;
+import sn.ngirwi.medical.repository.UserRepository;
 import sn.ngirwi.medical.service.dto.PatientDTO;
 import sn.ngirwi.medical.service.mapper.PatientMapper;
 
@@ -29,11 +31,14 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
 
+    private final UserRepository userRepository;
+
     private final PatientMapper patientMapper;
     private final DossierMedicalRepository dossierMedicalRepository;
 
-    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper, DossierMedicalRepository dossierMedicalRepository) {
+    public PatientService(PatientRepository patientRepository, UserRepository userRepository, PatientMapper patientMapper, DossierMedicalRepository dossierMedicalRepository) {
         this.patientRepository = patientRepository;
+        this.userRepository = userRepository;
         this.patientMapper = patientMapper;
         this.dossierMedicalRepository = dossierMedicalRepository;
     }
@@ -94,6 +99,20 @@ public class PatientService {
     public Page<PatientDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Patients");
         return patientRepository.findAll(pageable).map(patientMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PatientDTO> findAll(Pageable pageable, Long id) {
+        log.debug("Request to get all Patients by hospital " + id );
+        List<User> users = userRepository.findByHospitalId(id);
+        List<String> logins = new ArrayList<>();
+        if (users.size() > 0){
+            for (User user : users) {
+                log.debug(user.toString());
+                logins.add(user.getLogin());
+            }
+        }
+        return patientRepository.findByAuthorIn(logins, pageable).map(patientMapper::toDto);
     }
 
     /**
