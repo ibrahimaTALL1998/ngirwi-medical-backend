@@ -78,7 +78,7 @@ public class DossierMedical implements Serializable {
     private String author;
 
     @JsonIgnoreProperties(value = { "dossierMedical", "consultations" }, allowSetters = true)
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private Patient patient;
 

@@ -176,7 +176,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'ngirwiBackEndApp'
+    name: 'ngirwi-front-end'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "http://localhost:8100,http://localhost:9000"
@@ -186,7 +186,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: NgirwiBackEnd@localhost
+    from: ngirwimedical925@outlook.com
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**

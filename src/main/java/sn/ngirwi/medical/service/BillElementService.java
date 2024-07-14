@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.BillElement;
 import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.service.dto.BillElementDTO;
+import sn.ngirwi.medical.service.dto.MedecineDTO;
 import sn.ngirwi.medical.service.mapper.BillElementMapper;
 
 /**
@@ -86,6 +88,12 @@ public class BillElementService {
     public Page<BillElementDTO> findAll(Pageable pageable) {
         log.debug("Request to get all BillElements");
         return billElementRepository.findAll(pageable).map(billElementMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BillElementDTO> findAll(Long id) {
+        log.debug("Request to get all BillElemnts");
+        return billElementMapper.toDto(billElementRepository.findByBill_Id(id));
     }
 
     /**

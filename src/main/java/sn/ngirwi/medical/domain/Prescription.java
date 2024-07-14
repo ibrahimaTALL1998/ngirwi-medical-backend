@@ -33,7 +33,7 @@ public class Prescription implements Serializable {
     private String author;
 
     @JsonIgnoreProperties(value = { "patient", "ordonance" }, allowSetters = true)
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private Consultation consultation;
 

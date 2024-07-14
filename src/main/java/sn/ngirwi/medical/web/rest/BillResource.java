@@ -19,8 +19,7 @@ import sn.ngirwi.medical.repository.BillRepository;
 import sn.ngirwi.medical.service.BillService;
 import sn.ngirwi.medical.service.dto.BillDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
-//import tech.jhipster.web.util.HeaderUtil;
-import sn.ngirwi.medical.utils.HeaderUtil;
+import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -60,12 +59,25 @@ public class BillResource {
         if (billDTO.getId() != null) {
             throw new BadRequestAlertException("A new bill cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        BillDTO result = billService.save(billDTO);
+        BillDTO result = billService.saveBis(billDTO);
         return ResponseEntity
             .created(new URI("/api/bills/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
+//    @PostMapping("/billsbis")
+//    public ResponseEntity<BillDTO> createBillBis(@RequestBody BillDTO billDTO) throws URISyntaxException {
+//        log.debug("REST request to save Bill : {}", billDTO);
+//        if (billDTO.getId() != null) {
+//            throw new BadRequestAlertException("A new bill cannot already have an ID", ENTITY_NAME, "idexists");
+//        }
+//        BillDTO result = billService.saveBis(billDTO);
+//        return ResponseEntity
+//            .created(new URI("/api/bills/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+//            .body(result);
+//    }
 
     /**
      * {@code PUT  /bills/:id} : Updates an existing bill.
@@ -92,7 +104,7 @@ public class BillResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        BillDTO result = billService.update(billDTO);
+        BillDTO result = billService.updateBis(billDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, billDTO.getId().toString()))
@@ -145,6 +157,14 @@ public class BillResource {
     public ResponseEntity<List<BillDTO>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Bills");
         Page<BillDTO> page = billService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/billsbis/{id}")
+    public ResponseEntity<List<BillDTO>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @PathVariable Long id) {
+        log.debug("REST request to get a page of Bills " + id);
+        Page<BillDTO> page = billService.findAll(pageable, id);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

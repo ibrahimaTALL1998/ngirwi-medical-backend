@@ -143,6 +143,12 @@ public class MedecineResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of medecines in body.
      */
+    @GetMapping("/medecines/prescription/{id}")
+    public List<MedecineDTO> getAllMedecinesByPrescriptionID(@PathVariable Long id) {
+        log.debug("REST request to get a page of Medecines");
+        return medecineService.findAll(id);
+    }
+
     @GetMapping("/medecines")
     public ResponseEntity<List<MedecineDTO>> getAllMedecines(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Medecines");

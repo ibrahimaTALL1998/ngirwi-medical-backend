@@ -30,6 +30,12 @@
       "otherEntityName": "patient",
       "relationshipName": "patient",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "surveillanceSheet",
+      "otherEntityRelationshipName": "hospitalisation",
+      "relationshipName": "surveillanceSheet",
+      "relationshipType": "one-to-many"
     }
   ],
   "service": "serviceClass"

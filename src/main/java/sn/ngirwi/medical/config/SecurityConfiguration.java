@@ -53,14 +53,17 @@ public class SecurityConfiguration {
             .csrf()
             .ignoringAntMatchers("/h2-console/**")
             .disable()
+            .headers()
+            .frameOptions().sameOrigin()
+            .and()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
-        .and()
+            .authenticationEntryPoint(problemSupport)
+            .accessDeniedHandler(problemSupport)
+            .and()
             .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .antMatchers("/swagger-ui/**").permitAll()
@@ -78,13 +81,51 @@ public class SecurityConfiguration {
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/prometheus").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-        .and()
+            .and()
             .httpBasic()
-        .and()
+            .and()
             .apply(securityConfigurerAdapter());
         return http.build();
         // @formatter:on
     }
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        // @formatter:off
+//        http
+//            .csrf()
+//            .ignoringAntMatchers("/h2-console/**")
+//            .disable()
+//            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+//            .exceptionHandling()
+//                .authenticationEntryPoint(problemSupport)
+//                .accessDeniedHandler(problemSupport)
+//        .and()
+//            .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//        .and()
+//            .authorizeRequests()
+//            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//            .antMatchers("/swagger-ui/**").permitAll()
+//            .antMatchers("/test/**").permitAll()
+//            .antMatchers("/h2-console/**").permitAll()
+//            .antMatchers("/api/authenticate").permitAll()
+//            .antMatchers("/api/register").permitAll()
+//            .antMatchers("/api/activate").permitAll()
+//            .antMatchers("/api/account/reset-password/init").permitAll()
+//            .antMatchers("/api/account/reset-password/finish").permitAll()
+//            .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+//            .antMatchers("/api/**").authenticated()
+//            .antMatchers("/management/health").permitAll()
+//            .antMatchers("/management/health/**").permitAll()
+//            .antMatchers("/management/info").permitAll()
+//            .antMatchers("/management/prometheus").permitAll()
+//            .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+//        .and()
+//            .httpBasic()
+//        .and()
+//            .apply(securityConfigurerAdapter());
+//        return http.build();
+//        // @formatter:on
+//    }
 
     private JWTConfigurer securityConfigurerAdapter() {
         return new JWTConfigurer(tokenProvider);

@@ -2,16 +2,16 @@ package sn.ngirwi.medical.service.model;
 
 public class PrescriptionForm {
 
-    private String medecine;
+    private String name;
     private String frequency;
     private String duration;
 
-    public String getMedecine() {
-        return medecine;
+    public String getName() {
+        return name;
     }
 
-    public void setMedecine(String medecine) {
-        this.medecine = medecine;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getFrequency() {

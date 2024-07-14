@@ -1,6 +1,5 @@
 package sn.ngirwi.medical.service;
 
-import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.Hospitalisation;
-import sn.ngirwi.medical.domain.SurveillanceSheet;
-import sn.ngirwi.medical.domain.enumeration.HospitalisationStatus;
 import sn.ngirwi.medical.repository.HospitalisationRepository;
-import sn.ngirwi.medical.repository.SurveillanceSheetRepository;
-import sn.ngirwi.medical.service.model.HospitalisationForm;
 
 /**
  * Service Implementation for managing {@link Hospitalisation}.
@@ -26,11 +21,8 @@ public class HospitalisationService {
 
     private final HospitalisationRepository hospitalisationRepository;
 
-    private final SurveillanceSheetRepository surveillanceSheetRepository;
-
-    public HospitalisationService(HospitalisationRepository hospitalisationRepository, SurveillanceSheetRepository surveillanceSheetRepository) {
+    public HospitalisationService(HospitalisationRepository hospitalisationRepository) {
         this.hospitalisationRepository = hospitalisationRepository;
-        this.surveillanceSheetRepository = surveillanceSheetRepository;
     }
 
     /**
@@ -117,44 +109,5 @@ public class HospitalisationService {
     public void delete(Long id) {
         log.debug("Request to delete Hospitalisation : {}", id);
         hospitalisationRepository.deleteById(id);
-    }
-
-    public Hospitalisation saveBis(HospitalisationForm form) {
-        log.debug("FORM");
-        form.toString();
-
-        Hospitalisation h = new Hospitalisation();
-
-        //mapping hospitalisation
-        h.setDoctorName(form.getDoctorName());
-        h.setPatient(form.getPatient());
-        h.setStatus(form.getStatus());
-        h.setEntryDate(Instant.parse(form.getEntryDate()));
-
-        //mapping sheet
-        SurveillanceSheet s = new SurveillanceSheet();
-        s.setGlasgow(form.getGlasgow());
-        s.setTa(form.getTa());
-        s.setGravityClass(form.getGravityClass());
-        s.setPulseRate(form.getPulseRate());
-        s.setHoraryDiuresis(form.getHoraryDiuresis());
-        s.setTemperature(form.getTemperature());
-        s.setHealthEvolution(form.getHealthEvolution());
-        s.setPulseRate(form.getPulseRate());
-        s.setRespiratoryFrequency(form.getRespiratoryFrequency());
-        s.setRecolorationTime(form.getRecolorationTime());
-        s.setGlasgow(form.getGlasgow());
-        s.setSpo2(form.getSpo2());
-        s.setSheetDate(form.getSheetDate());
-        s.setHospitalisation(h);
-
-        surveillanceSheetRepository.save(s);
-
-        return hospitalisationRepository.save(h);
-    }
-
-    public Optional<Hospitalisation> findPatient(Long id) {
-        log.debug("Request to get Hospitalisation in progress for specific patient: {}", id);
-        return hospitalisationRepository.findByPatient_IdAndStatus(id, HospitalisationStatus.STARTED);
     }
 }

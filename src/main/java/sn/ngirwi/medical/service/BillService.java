@@ -1,6 +1,7 @@
 package sn.ngirwi.medical.service;
 
-import java.util.Optional;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,8 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.Bill;
+import sn.ngirwi.medical.domain.BillElement;
+import sn.ngirwi.medical.domain.User;
+import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.repository.BillRepository;
+import sn.ngirwi.medical.repository.UserRepository;
 import sn.ngirwi.medical.service.dto.BillDTO;
+import sn.ngirwi.medical.service.dto.BillElementDTO;
+import sn.ngirwi.medical.service.mapper.BillElementMapper;
 import sn.ngirwi.medical.service.mapper.BillMapper;
 
 /**
@@ -23,11 +30,20 @@ public class BillService {
 
     private final BillRepository billRepository;
 
+    private final BillElementRepository billElementRepository;
+
+    private final UserRepository userRepository;
+
     private final BillMapper billMapper;
 
-    public BillService(BillRepository billRepository, BillMapper billMapper) {
+    private final BillElementMapper billElementMapper;
+
+    public BillService(BillRepository billRepository, BillElementRepository billElementRepository, UserRepository userRepository, BillMapper billMapper, BillElementMapper billElementMapper) {
         this.billRepository = billRepository;
+        this.billElementRepository = billElementRepository;
+        this.userRepository = userRepository;
         this.billMapper = billMapper;
+        this.billElementMapper = billElementMapper;
     }
 
     /**
@@ -43,6 +59,49 @@ public class BillService {
         return billMapper.toDto(bill);
     }
 
+    public Bill mapElements(BillDTO billDto, Bill bill){
+        Set<BillElement> billElements = new HashSet<>();
+        for (BillElementDTO billElementDTO : billDto.getBillElements()){
+            BillElement billElement = billElementMapper.toEntity(billElementDTO);
+            billElement.setBill(bill);
+
+            billElements.add(billElement);
+        }
+
+        bill.setBillElements(billElements);
+        return bill;
+    }
+
+    @Transactional
+    public BillDTO saveBis(BillDTO billDTO) {
+        log.debug("Request to save bill : {}", billDTO);
+
+        Bill bill = billMapper.toEntity(billDTO);
+        bill = mapElements(billDTO, bill);
+
+        // Ensure bill.getBillElements() is not null and iterate over elements
+        if (bill.getBillElements() != null) {
+            for (BillElement element : bill.getBillElements()) {
+                element.setBill(bill);
+                element = billElementRepository.save(element);
+                log.debug("Saved BillElement: {}", element);
+            }
+        } else {
+            log.debug("No BillElements found in bill");
+        }
+
+        // Save the Bill entity
+        bill = billRepository.save(bill);
+
+        log.debug("Saved Bill entity: {}", bill);
+
+        billDTO.setId(bill.getId());
+
+        return billDTO;
+    }
+
+
+
     /**
      * Update a bill.
      *
@@ -54,6 +113,30 @@ public class BillService {
         Bill bill = billMapper.toEntity(billDTO);
         bill = billRepository.save(bill);
         return billMapper.toDto(bill);
+    }
+
+    public BillDTO updateBis(BillDTO billDTO) {
+        log.debug("Request to update bill : {}", billDTO);
+
+        Bill bill = billMapper.toEntity(billDTO);
+        bill = mapElements(billDTO, bill);
+
+        for (BillElement element : bill.getBillElements()) {
+            if (billDTO.getId() != null && billElementRepository.existsByNameAndPriceAndPercentageAndQuantityAndBill_Id(element.getName(), element.getPrice(), element.getPercentage(), element.getQuantity(), billDTO.getId())) {
+                billElementRepository.deleteByNameAndPriceAndPercentageAndQuantityAndBill_Id(element.getName(), element.getPrice(), element.getPercentage(), element.getQuantity(), billDTO.getId());
+            }
+            element.setBill(bill);
+            element = billElementRepository.save(element);
+            log.debug("SAVE CHECK " + element);
+        }
+
+        bill = billRepository.save(bill);
+
+        log.debug(bill.toString());
+
+        billDTO.setId(bill.getId());
+
+        return billDTO;
     }
 
     /**
@@ -86,6 +169,20 @@ public class BillService {
     public Page<BillDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Bills");
         return billRepository.findAll(pageable).map(billMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BillDTO> findAll(Pageable pageable, Long id) {
+        log.debug("Request to get all bills by hospital " + id );
+        List<User> users = userRepository.findByHospitalId(id);
+        List<String> logins = new ArrayList<>();
+        if (users.size() > 0){
+            for (User user : users) {
+                log.debug(user.toString());
+                logins.add(user.getLogin());
+            }
+        }
+        return billRepository.findByAuthorIn(logins, pageable).map(billMapper::toDto);
     }
 
     /**

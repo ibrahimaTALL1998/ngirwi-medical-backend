@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -37,4 +38,8 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
 
     @Query("select consultation from Consultation consultation left join fetch consultation.patient where consultation.id =:id")
     Optional<Consultation> findOneWithToOneRelationships(@Param("id") Long id);
+
+    Page<Consultation> findByAuthorIn(Collection<String> authors, Pageable pageable);
+
+
 }

@@ -84,7 +84,7 @@ public class Patient implements Serializable {
     private String author;
 
     @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
-    @OneToOne(mappedBy = "patient")
+    @OneToOne(mappedBy = "patient", fetch = FetchType.EAGER)
     private DossierMedical dossierMedical;
 
     @OneToMany(mappedBy = "patient")

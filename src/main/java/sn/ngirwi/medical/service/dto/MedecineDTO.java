@@ -1,5 +1,9 @@
 package sn.ngirwi.medical.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,6 +11,7 @@ import java.util.Objects;
  * A DTO for the {@link sn.ngirwi.medical.domain.Medecine} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class MedecineDTO implements Serializable {
 
     private Long id;

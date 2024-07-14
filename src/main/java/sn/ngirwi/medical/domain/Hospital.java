@@ -1,19 +1,18 @@
 package sn.ngirwi.medical.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A BillElement.
+ * A Hospital.
  */
 @Entity
-@Table(name = "bill_element")
+@Table(name = "hospital")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class BillElement implements Serializable {
+public class Hospital implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,18 +25,18 @@ public class BillElement implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "adress")
+    private String adress;
 
-    @Column(name = "percentage")
-    private Double percentage;
+    @Column(name = "phone")
+    private String phone;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Lob
+    @Column(name = "logo")
+    private byte[] logo;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "patient", "billElements" }, allowSetters = true)
-    private Bill bill;
+    @Column(name = "logo_content_type")
+    private String logoContentType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -45,7 +44,7 @@ public class BillElement implements Serializable {
         return this.id;
     }
 
-    public BillElement id(Long id) {
+    public Hospital id(Long id) {
         this.setId(id);
         return this;
     }
@@ -58,7 +57,7 @@ public class BillElement implements Serializable {
         return this.name;
     }
 
-    public BillElement name(String name) {
+    public Hospital name(String name) {
         this.setName(name);
         return this;
     }
@@ -67,56 +66,56 @@ public class BillElement implements Serializable {
         this.name = name;
     }
 
-    public Double getPrice() {
-        return this.price;
+    public String getAdress() {
+        return this.adress;
     }
 
-    public BillElement price(Double price) {
-        this.setPrice(price);
+    public Hospital adress(String adress) {
+        this.setAdress(adress);
         return this;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 
-    public Double getPercentage() {
-        return this.percentage;
+    public String getPhone() {
+        return this.phone;
     }
 
-    public BillElement percentage(Double percentage) {
-        this.setPercentage(percentage);
+    public Hospital phone(String phone) {
+        this.setPhone(phone);
         return this;
     }
 
-    public void setPercentage(Double percentage) {
-        this.percentage = percentage;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public Integer getQuantity() {
-        return this.quantity;
+    public byte[] getLogo() {
+        return this.logo;
     }
 
-    public BillElement quantity(Integer quantity) {
-        this.setQuantity(quantity);
+    public Hospital logo(byte[] logo) {
+        this.setLogo(logo);
         return this;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setLogo(byte[] logo) {
+        this.logo = logo;
     }
 
-    public Bill getBill() {
-        return this.bill;
+    public String getLogoContentType() {
+        return this.logoContentType;
     }
 
-    public void setBill(Bill bill) {
-        this.bill = bill;
-    }
-
-    public BillElement bill(Bill bill) {
-        this.setBill(bill);
+    public Hospital logoContentType(String logoContentType) {
+        this.logoContentType = logoContentType;
         return this;
+    }
+
+    public void setLogoContentType(String logoContentType) {
+        this.logoContentType = logoContentType;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -126,10 +125,10 @@ public class BillElement implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BillElement)) {
+        if (!(o instanceof Hospital)) {
             return false;
         }
-        return id != null && id.equals(((BillElement) o).id);
+        return id != null && id.equals(((Hospital) o).id);
     }
 
     @Override
@@ -141,12 +140,13 @@ public class BillElement implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "BillElement{" +
+        return "Hospital{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", price=" + getPrice() +
-            ", percentage=" + getPercentage() +
-            ", quantity=" + getQuantity() +
+            ", adress='" + getAdress() + "'" +
+            ", phone='" + getPhone() + "'" +
+            ", logo='" + getLogo() + "'" +
+            ", logoContentType='" + getLogoContentType() + "'" +
             "}";
     }
 }

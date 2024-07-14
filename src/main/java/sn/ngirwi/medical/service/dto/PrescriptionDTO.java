@@ -1,5 +1,8 @@
 package sn.ngirwi.medical.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import sn.ngirwi.medical.service.model.PrescriptionForm;
 
 import java.io.Serializable;
@@ -12,6 +15,7 @@ import java.util.Set;
  * A DTO for the {@link sn.ngirwi.medical.domain.Prescription} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PrescriptionDTO implements Serializable {
 
     private Long id;
@@ -22,7 +26,7 @@ public class PrescriptionDTO implements Serializable {
 
     private ConsultationDTO consultation;
 
-    private Set<PrescriptionForm> form;
+    private Set<PrescriptionForm> medecines;
 
     public Long getId() {
         return id;
@@ -56,12 +60,12 @@ public class PrescriptionDTO implements Serializable {
         this.consultation = consultation;
     }
 
-    public Set<PrescriptionForm> getForm() {
-        return form;
+    public Set<PrescriptionForm> getMedecines() {
+        return medecines;
     }
 
-    public void setForm(Set<PrescriptionForm> form) {
-        this.form = form;
+    public void setMedecines(Set<PrescriptionForm> medecines) {
+        this.medecines = medecines;
     }
 
     @Override
@@ -92,7 +96,7 @@ public class PrescriptionDTO implements Serializable {
             ", creationDate=" + creationDate +
             ", author='" + author + '\'' +
             ", consultation=" + consultation +
-            ", form=" + form +
+            ", medecines=" + medecines +
             '}';
     }
 }

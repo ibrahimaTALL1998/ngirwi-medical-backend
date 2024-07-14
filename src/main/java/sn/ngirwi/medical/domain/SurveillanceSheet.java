@@ -60,7 +60,7 @@ public class SurveillanceSheet implements Serializable {
     private String sheetDate;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "patient", "surveillanceSheets" }, allowSetters = true)
     private Hospitalisation hospitalisation;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

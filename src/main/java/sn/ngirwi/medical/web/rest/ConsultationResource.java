@@ -16,14 +16,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.repository.ConsultationRepository;
+import sn.ngirwi.medical.security.AuthoritiesConstants;
 import sn.ngirwi.medical.service.ConsultationService;
 import sn.ngirwi.medical.service.dto.ConsultationDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
-//import tech.jhipster.web.util.HeaderUtil;
-import sn.ngirwi.medical.utils.HeaderUtil;
+import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -32,6 +34,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.DOCTOR + "\")")
 public class ConsultationResource {
 
     private final Logger log = LoggerFactory.getLogger(ConsultationResource.class);
@@ -166,6 +169,19 @@ public class ConsultationResource {
         } else {
             page = consultationService.findAll(pageable);
         }
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/consultationsbis/{id}")
+    public ResponseEntity<List<ConsultationDTO>> getAllConsultations(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false) String filter,
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload, @PathVariable Long id
+    ) {
+        log.debug("REST request to get a page of Consultations " + id);
+        Page<ConsultationDTO> page;
+        page = consultationService.findAll(pageable, id);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

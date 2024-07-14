@@ -44,6 +44,180 @@
             <column name="author" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="og" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="vd" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="eseptum" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ao" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="v_g_diastole" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ouverture_ao" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="v_g_systole" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="vp" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="o_g_ao" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="f_r_teicholtz" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="e_vp" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="septum_vg" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="f_e_teicholz" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="tapse" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="paroi_post" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="surface_og" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="surface_od" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="mesure_vd" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="fe" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="fe_a_2_c" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="fe_biplan" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="e" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="a" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="e_a" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="td" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="triv" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="duree_am_im" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="surface_regurgitee" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="pba" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="qr" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="vr" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="sor" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="fr" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="vmax_ap" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="itv" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="grad_max" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="grad_moy" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="dc" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="i_aoextension" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="vena_contracta" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="pht" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="i_t_extension" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="grad_max_b" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="paps" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ip" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="vmax" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="grad_max_c" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="grad_moy_b" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="s" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="d" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="s_d" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="a_a" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="duree_ap" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="e_aa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="a_aa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="e_a_aa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="e_ea" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="z" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -79,6 +253,64 @@
             <column name="exams" type="string"/>
             <column name="treatment" type="string"/>
             <column name="author" type="string"/>
+            <column name="og" type="string"/>
+            <column name="vd" type="string"/>
+            <column name="eseptum" type="string"/>
+            <column name="ao" type="string"/>
+            <column name="v_g_diastole" type="string"/>
+            <column name="ouverture_ao" type="string"/>
+            <column name="v_g_systole" type="string"/>
+            <column name="vp" type="string"/>
+            <column name="o_g_ao" type="string"/>
+            <column name="f_r_teicholtz" type="string"/>
+            <column name="e_vp" type="string"/>
+            <column name="septum_vg" type="string"/>
+            <column name="f_e_teicholz" type="string"/>
+            <column name="tapse" type="string"/>
+            <column name="paroi_post" type="string"/>
+            <column name="surface_og" type="string"/>
+            <column name="surface_od" type="string"/>
+            <column name="mesure_vd" type="string"/>
+            <column name="fe" type="string"/>
+            <column name="fe_a_2_c" type="string"/>
+            <column name="fe_biplan" type="string"/>
+            <column name="e" type="string"/>
+            <column name="a" type="string"/>
+            <column name="e_a" type="string"/>
+            <column name="td" type="string"/>
+            <column name="triv" type="string"/>
+            <column name="duree_am_im" type="string"/>
+            <column name="surface_regurgitee" type="string"/>
+            <column name="pba" type="string"/>
+            <column name="qr" type="string"/>
+            <column name="vr" type="string"/>
+            <column name="sor" type="string"/>
+            <column name="fr" type="string"/>
+            <column name="vmax_ap" type="string"/>
+            <column name="itv" type="string"/>
+            <column name="grad_max" type="string"/>
+            <column name="grad_moy" type="string"/>
+            <column name="dc" type="string"/>
+            <column name="i_aoextension" type="string"/>
+            <column name="vena_contracta" type="string"/>
+            <column name="pht" type="string"/>
+            <column name="i_t_extension" type="string"/>
+            <column name="grad_max_b" type="string"/>
+            <column name="paps" type="string"/>
+            <column name="ip" type="string"/>
+            <column name="vmax" type="string"/>
+            <column name="grad_max_c" type="string"/>
+            <column name="grad_moy_b" type="string"/>
+            <column name="s" type="string"/>
+            <column name="d" type="string"/>
+            <column name="s_d" type="string"/>
+            <column name="a_a" type="string"/>
+            <column name="duree_ap" type="string"/>
+            <column name="e_aa" type="string"/>
+            <column name="a_aa" type="string"/>
+            <column name="e_a_aa" type="string"/>
+            <column name="e_ea" type="string"/>
+            <column name="z" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

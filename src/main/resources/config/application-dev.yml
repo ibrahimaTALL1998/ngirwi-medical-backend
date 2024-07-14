@@ -41,16 +41,24 @@ spring:
   h2:
     console:
       # disable spring boot built-in h2-console since we start it manually with correct configuration
-      enabled: false
+      enabled: true
+      path: /h2-console
   jpa:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
+    #contexts: dev, faker
+    contexts: dev
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp-mail.outlook.com
+    port: 587
+    username: ngirwimedical925@outlook.com  #Replace this field with your Outlook username.
+    password: Ngirwi-Medical@2023             #Replace this field with your Outlook password.
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp-mail.outlook.com
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:

@@ -12,6 +12,14 @@
     {
       "fieldName": "price",
       "fieldType": "Double"
+    },
+    {
+      "fieldName": "percentage",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "quantity",
+      "fieldType": "Integer"
     }
   ],
   "fluentMethods": true,

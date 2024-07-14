@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.repository.PrescriptionRepository;
@@ -68,13 +69,16 @@ public class PrescriptionResource {
     }
 
     @PostMapping("/prescriptionsbis")
-    public void createPrescriptionBis(@RequestBody PrescriptionDTO prescriptionDTO) throws URISyntaxException {
+    public ResponseEntity<PrescriptionDTO> createPrescriptionBis(@RequestBody PrescriptionDTO prescriptionDTO) throws URISyntaxException {
         log.debug("REST request to save Prescription with Form: {}", prescriptionDTO);
         if (prescriptionDTO.getId() != null) {
             throw new BadRequestAlertException("A new prescription cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PrescriptionDTO result = prescriptionService.saveBis(prescriptionDTO);
-
+        return ResponseEntity
+            .created(new URI("/api/prescriptions/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**
@@ -104,7 +108,8 @@ public class PrescriptionResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        PrescriptionDTO result = prescriptionService.update(prescriptionDTO);
+        //PrescriptionDTO result = prescriptionService.update(prescriptionDTO);
+        PrescriptionDTO result = prescriptionService.updateBis(prescriptionDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, prescriptionDTO.getId().toString()))
@@ -157,6 +162,14 @@ public class PrescriptionResource {
     public ResponseEntity<List<PrescriptionDTO>> getAllPrescriptions(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Prescriptions");
         Page<PrescriptionDTO> page = prescriptionService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/prescriptionsbis/{id}")
+    public ResponseEntity<List<PrescriptionDTO>> getAllPrescriptions(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @PathVariable Long id) {
+        log.debug("REST request to get a page of Prescriptions " + id);
+        Page<PrescriptionDTO> page = prescriptionService.findAll(pageable, id);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
