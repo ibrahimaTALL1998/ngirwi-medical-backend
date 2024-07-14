@@ -13,14 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.domain.Hospitalisation;
 import sn.ngirwi.medical.repository.HospitalisationRepository;
-import sn.ngirwi.medical.security.AuthoritiesConstants;
 import sn.ngirwi.medical.service.HospitalisationService;
-import sn.ngirwi.medical.service.model.HospitalisationForm;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -31,7 +28,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.DOCTOR + "\")")
 public class HospitalisationResource {
 
     private final Logger log = LoggerFactory.getLogger(HospitalisationResource.class);
@@ -66,17 +62,6 @@ public class HospitalisationResource {
         Hospitalisation result = hospitalisationService.save(hospitalisation);
         return ResponseEntity
             .created(new URI("/api/hospitalisations/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
-
-    @PostMapping("/hospitalisationsbis")
-    public ResponseEntity<Hospitalisation> createHospitalisationBis(@RequestBody HospitalisationForm form) throws URISyntaxException {
-        log.debug("REST request to save Hospitalisation form: {}", form);
-        // Hospitalisation result = hospitalisationService.saveBis(form);
-        Hospitalisation result = hospitalisationService.saveBis(form);
-        return ResponseEntity
-            .created(new URI("/api/hospitalisationsbis/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -175,13 +160,6 @@ public class HospitalisationResource {
     public ResponseEntity<Hospitalisation> getHospitalisation(@PathVariable Long id) {
         log.debug("REST request to get Hospitalisation : {}", id);
         Optional<Hospitalisation> hospitalisation = hospitalisationService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(hospitalisation);
-    }
-
-    @GetMapping("/hospitalisations-patient/{id}")
-    public ResponseEntity<Hospitalisation> getHospitalisationPatientEnCours(@PathVariable Long id) {
-        log.debug("REST request to get Hospitalisation for specific patient : {}", id);
-        Optional<Hospitalisation> hospitalisation = hospitalisationService.findPatient(id);
         return ResponseUtil.wrapOrNotFound(hospitalisation);
     }
 

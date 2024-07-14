@@ -3,6 +3,8 @@ package sn.ngirwi.medical.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,6 +43,11 @@ public class Hospitalisation implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "dossierMedical", "consultations" }, allowSetters = true)
     private Patient patient;
+
+    @OneToMany(mappedBy = "hospitalisation")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "hospitalisation" }, allowSetters = true)
+    private Set<SurveillanceSheet> surveillanceSheets = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -119,6 +126,37 @@ public class Hospitalisation implements Serializable {
 
     public Hospitalisation patient(Patient patient) {
         this.setPatient(patient);
+        return this;
+    }
+
+    public Set<SurveillanceSheet> getSurveillanceSheets() {
+        return this.surveillanceSheets;
+    }
+
+    public void setSurveillanceSheets(Set<SurveillanceSheet> surveillanceSheets) {
+        if (this.surveillanceSheets != null) {
+            this.surveillanceSheets.forEach(i -> i.setHospitalisation(null));
+        }
+        if (surveillanceSheets != null) {
+            surveillanceSheets.forEach(i -> i.setHospitalisation(this));
+        }
+        this.surveillanceSheets = surveillanceSheets;
+    }
+
+    public Hospitalisation surveillanceSheets(Set<SurveillanceSheet> surveillanceSheets) {
+        this.setSurveillanceSheets(surveillanceSheets);
+        return this;
+    }
+
+    public Hospitalisation addSurveillanceSheet(SurveillanceSheet surveillanceSheet) {
+        this.surveillanceSheets.add(surveillanceSheet);
+        surveillanceSheet.setHospitalisation(this);
+        return this;
+    }
+
+    public Hospitalisation removeSurveillanceSheet(SurveillanceSheet surveillanceSheet) {
+        this.surveillanceSheets.remove(surveillanceSheet);
+        surveillanceSheet.setHospitalisation(null);
         return this;
     }
 
