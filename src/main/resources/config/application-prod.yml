@@ -132,7 +132,7 @@ jhipster:
 #    name: 'ngirwi-front-end'
 #   By default CORS is disabled. Uncomment to enable.
   cors:
-    allowed-origins: "http://localhost:3000,https://localhost:3000,http://localhost:4200,https://localhost:4200,http://localhost:9000,https://localhost:9000,http://localhost:8080,https://localhost:8080,http://localhost:8081,https://localhost:8081,http://ngirwimedical.com,https://ngirwimedical.com,http://backend.ngirwimedical.com,https://backend.ngirwimedical.com"
+    allowed-origins: "http://localhost:3000,https://localhost:3000,http://localhost:4200,https://localhost:4200,http://localhost:9000,https://localhost:9000,http://localhost:8080,https://localhost:8080,http://localhost:8081,https://localhost:8081,http://ngirwimedical.com,https://ngirwimedical.com,http://backend.ngirwimedical.com,https://backend.ngirwimedical.com,http://www.ngirwimedical.com,https://www.ngirwimedical.com"
     allowed-methods: "*"
     allowed-headers: "*"
     exposed-headers: "*"
