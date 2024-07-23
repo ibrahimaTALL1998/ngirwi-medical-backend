@@ -34,7 +34,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     # url: jdbc:postgresql://ngirwimedicaldb.cluster-cxecggykaujf.eu-north-1.rds.amazonaws.com:5432/postgres
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://45.130.229.144:5432/postgres
     username: ngirwimedical
     password: Ngirwi-medical2024
     hikari:
@@ -120,7 +120,7 @@ jhipster:
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: https://ngirwimedical.com # Modify according to your server's URL
+    base-url: https://www.ngirwimedical.com # Modify according to your server's URL
   logging:
     use-json-format: false # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
