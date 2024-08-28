@@ -34,8 +34,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     # url: jdbc:postgresql://ngirwimedicaldb.cluster-cxecggykaujf.eu-north-1.rds.amazonaws.com:5432/postgres
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: ngirwimedical
+    url: jdbc:postgresql://localhost:5432/ngirwimedical_db
+    username: ngirwimedicalUser
     password: Ngirwi-medical2024
     hikari:
       poolName: Hikari
