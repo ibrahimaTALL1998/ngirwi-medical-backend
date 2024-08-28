@@ -132,7 +132,7 @@ jhipster:
       #    name: 'ngirwi-front-end'
       #   By default CORS is disabled. Uncomment to enable.
   cors:
-    allowed-origins: "https://www.ngirwimedical.com"
+    allowed-origins: "https://www.ngirwimedical.com,http://www.ngirwimedical.com"
     allowed-methods: "*"
     allowed-headers: "*"
     exposed-headers: "Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params"
