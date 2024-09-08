@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.Bill;
 import sn.ngirwi.medical.domain.BillElement;
+import sn.ngirwi.medical.domain.Medecine;
 import sn.ngirwi.medical.domain.User;
 import sn.ngirwi.medical.repository.BillElementRepository;
 import sn.ngirwi.medical.repository.BillRepository;
@@ -79,6 +81,12 @@ public class BillService {
         Bill bill = billMapper.toEntity(billDTO);
         bill = mapElements(billDTO, bill);
 
+        // Save the Bill entity
+        if (bill.getTotal() == null){
+            bill.setTotal(calculateTotal(bill));
+        }
+        bill = billRepository.save(bill);
+
         // Ensure bill.getBillElements() is not null and iterate over elements
         if (bill.getBillElements() != null) {
             for (BillElement element : bill.getBillElements()) {
@@ -90,14 +98,26 @@ public class BillService {
             log.debug("No BillElements found in bill");
         }
 
-        // Save the Bill entity
-        bill = billRepository.save(bill);
-
         log.debug("Saved Bill entity: {}", bill);
 
         billDTO.setId(bill.getId());
 
         return billDTO;
+    }
+
+    public BigDecimal calculateTotal(Bill bill){
+        BigDecimal total = BigDecimal.ZERO;
+        if (bill.getBillElements() != null) {
+            for (BillElement element : bill.getBillElements()) {
+                Double allWithoutReduc = (element.getPrice() != null ? element.getPrice() : 0) * (element.getQuantity() != null ? element.getQuantity() : 0);
+                Double allWithReduc = allWithoutReduc - (allWithoutReduc * (element.getPercentage() != null ? element.getPercentage() : 0) / 100);
+                total = total.add(BigDecimal.valueOf(allWithReduc));
+            }
+        } else {
+            log.debug("No BillElements found in bill");
+            return total;
+        }
+        return total;
     }
 
 
@@ -166,13 +186,17 @@ public class BillService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<BillDTO> findAll(Pageable pageable) {
+    //public Page<BillDTO> findAll(Pageable pageable) {
+     //   log.debug("Request to get all Bills");
+       // return billRepository.findAll(pageable).map(billMapper::toDto);
+    //}
+    public Page<Bill> findAll(Pageable pageable) {
         log.debug("Request to get all Bills");
-        return billRepository.findAll(pageable).map(billMapper::toDto);
+        return billRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<BillDTO> findAll(Pageable pageable, Long id) {
+    public Page<Bill> findAll(Pageable pageable, Long id) {
         log.debug("Request to get all bills by hospital " + id );
         List<User> users = userRepository.findByHospitalId(id);
         List<String> logins = new ArrayList<>();
@@ -182,7 +206,8 @@ public class BillService {
                 logins.add(user.getLogin());
             }
         }
-        return billRepository.findByAuthorIn(logins, pageable).map(billMapper::toDto);
+        return billRepository.findByAuthorIn(logins, pageable);
+        //return billRepository.findAll(pageable);
     }
 
     /**
@@ -192,9 +217,9 @@ public class BillService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<BillDTO> findOne(Long id) {
+    public Optional<Bill> findOne(Long id) {
         log.debug("Request to get Bill : {}", id);
-        return billRepository.findById(id).map(billMapper::toDto);
+        return billRepository.findById(id);
     }
 
     /**
@@ -204,6 +229,11 @@ public class BillService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Bill : {}", id);
+        List<BillElement> billElements = billElementRepository.findByBill_Id(id);
+        for (BillElement b :
+            billElements) {
+            billElementRepository.deleteById(b.getId());
+        }
         billRepository.deleteById(id);
     }
 }

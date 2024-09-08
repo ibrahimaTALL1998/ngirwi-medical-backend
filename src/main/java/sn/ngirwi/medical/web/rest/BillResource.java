@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import sn.ngirwi.medical.domain.Bill;
 import sn.ngirwi.medical.repository.BillRepository;
 import sn.ngirwi.medical.service.BillService;
 import sn.ngirwi.medical.service.dto.BillDTO;
@@ -154,17 +155,17 @@ public class BillResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bills in body.
      */
     @GetMapping("/bills")
-    public ResponseEntity<List<BillDTO>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<Bill>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Bills");
-        Page<BillDTO> page = billService.findAll(pageable);
+        Page<Bill> page = billService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/billsbis/{id}")
-    public ResponseEntity<List<BillDTO>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @PathVariable Long id) {
+    public ResponseEntity<List<Bill>> getAllBills(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @PathVariable Long id) {
         log.debug("REST request to get a page of Bills " + id);
-        Page<BillDTO> page = billService.findAll(pageable, id);
+        Page<Bill> page = billService.findAll(pageable, id);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -176,9 +177,9 @@ public class BillResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the billDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/bills/{id}")
-    public ResponseEntity<BillDTO> getBill(@PathVariable Long id) {
+    public ResponseEntity<Bill> getBill(@PathVariable Long id) {
         log.debug("REST request to get Bill : {}", id);
-        Optional<BillDTO> billDTO = billService.findOne(id);
+        Optional<Bill> billDTO = billService.findOne(id);
         return ResponseUtil.wrapOrNotFound(billDTO);
     }
 
