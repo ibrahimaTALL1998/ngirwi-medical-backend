@@ -27,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import sn.ngirwi.medical.IntegrationTest;
 import sn.ngirwi.medical.domain.Consultation;
 import sn.ngirwi.medical.repository.ConsultationRepository;
@@ -247,6 +248,21 @@ class ConsultationResourceIT {
     private static final String DEFAULT_Z = "AAAAAAAAAA";
     private static final String UPDATED_Z = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXAM_GENERAL = "AAAAAAAAAA";
+    private static final String UPDATED_EXAM_GENERAL = "BBBBBBBBBB";
+
+    private static final Double DEFAULT_FREQUENCE_RESPIRATOIRE = 1D;
+    private static final Double UPDATED_FREQUENCE_RESPIRATOIRE = 2D;
+
+    private static final Double DEFAULT_FREQUENCE_CARDIAQUE = 1D;
+    private static final Double UPDATED_FREQUENCE_CARDIAQUE = 2D;
+
+    private static final String DEFAULT_COMMENTAIRE_LIBRE = "AAAAAAAAAA";
+    private static final String UPDATED_COMMENTAIRE_LIBRE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_RESULTATS_PARACLINIQUE = "AAAAAAAAAA";
+    private static final String UPDATED_RESULTATS_PARACLINIQUE = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/consultations";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -348,7 +364,12 @@ class ConsultationResourceIT {
             .aAA(DEFAULT_A_AA)
             .eAAa(DEFAULT_E_A_AA)
             .eEa(DEFAULT_E_EA)
-            .z(DEFAULT_Z);
+            .z(DEFAULT_Z)
+            .examGeneral(DEFAULT_EXAM_GENERAL)
+            .frequenceRespiratoire(DEFAULT_FREQUENCE_RESPIRATOIRE)
+            .frequenceCardiaque(DEFAULT_FREQUENCE_CARDIAQUE)
+            .commentaireLibre(DEFAULT_COMMENTAIRE_LIBRE)
+            .resultatsParaclinique(DEFAULT_RESULTATS_PARACLINIQUE);
         return consultation;
     }
 
@@ -427,7 +448,12 @@ class ConsultationResourceIT {
             .aAA(UPDATED_A_AA)
             .eAAa(UPDATED_E_A_AA)
             .eEa(UPDATED_E_EA)
-            .z(UPDATED_Z);
+            .z(UPDATED_Z)
+            .examGeneral(UPDATED_EXAM_GENERAL)
+            .frequenceRespiratoire(UPDATED_FREQUENCE_RESPIRATOIRE)
+            .frequenceCardiaque(UPDATED_FREQUENCE_CARDIAQUE)
+            .commentaireLibre(UPDATED_COMMENTAIRE_LIBRE)
+            .resultatsParaclinique(UPDATED_RESULTATS_PARACLINIQUE);
         return consultation;
     }
 
@@ -520,6 +546,11 @@ class ConsultationResourceIT {
         assertThat(testConsultation.geteAAa()).isEqualTo(DEFAULT_E_A_AA);
         assertThat(testConsultation.geteEa()).isEqualTo(DEFAULT_E_EA);
         assertThat(testConsultation.getZ()).isEqualTo(DEFAULT_Z);
+        assertThat(testConsultation.getExamGeneral()).isEqualTo(DEFAULT_EXAM_GENERAL);
+        assertThat(testConsultation.getFrequenceRespiratoire()).isEqualTo(DEFAULT_FREQUENCE_RESPIRATOIRE);
+        assertThat(testConsultation.getFrequenceCardiaque()).isEqualTo(DEFAULT_FREQUENCE_CARDIAQUE);
+        assertThat(testConsultation.getCommentaireLibre()).isEqualTo(DEFAULT_COMMENTAIRE_LIBRE);
+        assertThat(testConsultation.getResultatsParaclinique()).isEqualTo(DEFAULT_RESULTATS_PARACLINIQUE);
     }
 
     @Test
@@ -742,7 +773,12 @@ class ConsultationResourceIT {
             .andExpect(jsonPath("$.[*].aAA").value(hasItem(DEFAULT_A_AA)))
             .andExpect(jsonPath("$.[*].eAAa").value(hasItem(DEFAULT_E_A_AA)))
             .andExpect(jsonPath("$.[*].eEa").value(hasItem(DEFAULT_E_EA)))
-            .andExpect(jsonPath("$.[*].z").value(hasItem(DEFAULT_Z)));
+            .andExpect(jsonPath("$.[*].z").value(hasItem(DEFAULT_Z)))
+            .andExpect(jsonPath("$.[*].examGeneral").value(hasItem(DEFAULT_EXAM_GENERAL.toString())))
+            .andExpect(jsonPath("$.[*].frequenceRespiratoire").value(hasItem(DEFAULT_FREQUENCE_RESPIRATOIRE.doubleValue())))
+            .andExpect(jsonPath("$.[*].frequenceCardiaque").value(hasItem(DEFAULT_FREQUENCE_CARDIAQUE.doubleValue())))
+            .andExpect(jsonPath("$.[*].commentaireLibre").value(hasItem(DEFAULT_COMMENTAIRE_LIBRE.toString())))
+            .andExpect(jsonPath("$.[*].resultatsParaclinique").value(hasItem(DEFAULT_RESULTATS_PARACLINIQUE.toString())));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -841,7 +877,12 @@ class ConsultationResourceIT {
             .andExpect(jsonPath("$.aAA").value(DEFAULT_A_AA))
             .andExpect(jsonPath("$.eAAa").value(DEFAULT_E_A_AA))
             .andExpect(jsonPath("$.eEa").value(DEFAULT_E_EA))
-            .andExpect(jsonPath("$.z").value(DEFAULT_Z));
+            .andExpect(jsonPath("$.z").value(DEFAULT_Z))
+            .andExpect(jsonPath("$.examGeneral").value(DEFAULT_EXAM_GENERAL.toString()))
+            .andExpect(jsonPath("$.frequenceRespiratoire").value(DEFAULT_FREQUENCE_RESPIRATOIRE.doubleValue()))
+            .andExpect(jsonPath("$.frequenceCardiaque").value(DEFAULT_FREQUENCE_CARDIAQUE.doubleValue()))
+            .andExpect(jsonPath("$.commentaireLibre").value(DEFAULT_COMMENTAIRE_LIBRE.toString()))
+            .andExpect(jsonPath("$.resultatsParaclinique").value(DEFAULT_RESULTATS_PARACLINIQUE.toString()));
     }
 
     @Test
@@ -931,7 +972,12 @@ class ConsultationResourceIT {
             .aAA(UPDATED_A_AA)
             .eAAa(UPDATED_E_A_AA)
             .eEa(UPDATED_E_EA)
-            .z(UPDATED_Z);
+            .z(UPDATED_Z)
+            .examGeneral(UPDATED_EXAM_GENERAL)
+            .frequenceRespiratoire(UPDATED_FREQUENCE_RESPIRATOIRE)
+            .frequenceCardiaque(UPDATED_FREQUENCE_CARDIAQUE)
+            .commentaireLibre(UPDATED_COMMENTAIRE_LIBRE)
+            .resultatsParaclinique(UPDATED_RESULTATS_PARACLINIQUE);
         ConsultationDTO consultationDTO = consultationMapper.toDto(updatedConsultation);
 
         restConsultationMockMvc
@@ -1014,6 +1060,11 @@ class ConsultationResourceIT {
         assertThat(testConsultation.geteAAa()).isEqualTo(UPDATED_E_A_AA);
         assertThat(testConsultation.geteEa()).isEqualTo(UPDATED_E_EA);
         assertThat(testConsultation.getZ()).isEqualTo(UPDATED_Z);
+        assertThat(testConsultation.getExamGeneral()).isEqualTo(UPDATED_EXAM_GENERAL);
+        assertThat(testConsultation.getFrequenceRespiratoire()).isEqualTo(UPDATED_FREQUENCE_RESPIRATOIRE);
+        assertThat(testConsultation.getFrequenceCardiaque()).isEqualTo(UPDATED_FREQUENCE_CARDIAQUE);
+        assertThat(testConsultation.getCommentaireLibre()).isEqualTo(UPDATED_COMMENTAIRE_LIBRE);
+        assertThat(testConsultation.getResultatsParaclinique()).isEqualTo(UPDATED_RESULTATS_PARACLINIQUE);
     }
 
     @Test
@@ -1129,7 +1180,10 @@ class ConsultationResourceIT {
             .gradMoyB(UPDATED_GRAD_MOY_B)
             .s(UPDATED_S)
             .d(UPDATED_D)
-            .z(UPDATED_Z);
+            .z(UPDATED_Z)
+            .frequenceRespiratoire(UPDATED_FREQUENCE_RESPIRATOIRE)
+            .commentaireLibre(UPDATED_COMMENTAIRE_LIBRE)
+            .resultatsParaclinique(UPDATED_RESULTATS_PARACLINIQUE);
 
         restConsultationMockMvc
             .perform(
@@ -1211,6 +1265,11 @@ class ConsultationResourceIT {
         assertThat(testConsultation.geteAAa()).isEqualTo(DEFAULT_E_A_AA);
         assertThat(testConsultation.geteEa()).isEqualTo(DEFAULT_E_EA);
         assertThat(testConsultation.getZ()).isEqualTo(UPDATED_Z);
+        assertThat(testConsultation.getExamGeneral()).isEqualTo(DEFAULT_EXAM_GENERAL);
+        assertThat(testConsultation.getFrequenceRespiratoire()).isEqualTo(UPDATED_FREQUENCE_RESPIRATOIRE);
+        assertThat(testConsultation.getFrequenceCardiaque()).isEqualTo(DEFAULT_FREQUENCE_CARDIAQUE);
+        assertThat(testConsultation.getCommentaireLibre()).isEqualTo(UPDATED_COMMENTAIRE_LIBRE);
+        assertThat(testConsultation.getResultatsParaclinique()).isEqualTo(UPDATED_RESULTATS_PARACLINIQUE);
     }
 
     @Test
@@ -1293,7 +1352,12 @@ class ConsultationResourceIT {
             .aAA(UPDATED_A_AA)
             .eAAa(UPDATED_E_A_AA)
             .eEa(UPDATED_E_EA)
-            .z(UPDATED_Z);
+            .z(UPDATED_Z)
+            .examGeneral(UPDATED_EXAM_GENERAL)
+            .frequenceRespiratoire(UPDATED_FREQUENCE_RESPIRATOIRE)
+            .frequenceCardiaque(UPDATED_FREQUENCE_CARDIAQUE)
+            .commentaireLibre(UPDATED_COMMENTAIRE_LIBRE)
+            .resultatsParaclinique(UPDATED_RESULTATS_PARACLINIQUE);
 
         restConsultationMockMvc
             .perform(
@@ -1375,6 +1439,11 @@ class ConsultationResourceIT {
         assertThat(testConsultation.geteAAa()).isEqualTo(UPDATED_E_A_AA);
         assertThat(testConsultation.geteEa()).isEqualTo(UPDATED_E_EA);
         assertThat(testConsultation.getZ()).isEqualTo(UPDATED_Z);
+        assertThat(testConsultation.getExamGeneral()).isEqualTo(UPDATED_EXAM_GENERAL);
+        assertThat(testConsultation.getFrequenceRespiratoire()).isEqualTo(UPDATED_FREQUENCE_RESPIRATOIRE);
+        assertThat(testConsultation.getFrequenceCardiaque()).isEqualTo(UPDATED_FREQUENCE_CARDIAQUE);
+        assertThat(testConsultation.getCommentaireLibre()).isEqualTo(UPDATED_COMMENTAIRE_LIBRE);
+        assertThat(testConsultation.getResultatsParaclinique()).isEqualTo(UPDATED_RESULTATS_PARACLINIQUE);
     }
 
     @Test

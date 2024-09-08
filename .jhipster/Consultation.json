@@ -282,6 +282,29 @@
     {
       "fieldName": "z",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "examGeneral",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "frequenceRespiratoire",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "frequenceCardiaque",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "commentaireLibre",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "resultatsParaclinique",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
     }
   ],
   "fluentMethods": true,

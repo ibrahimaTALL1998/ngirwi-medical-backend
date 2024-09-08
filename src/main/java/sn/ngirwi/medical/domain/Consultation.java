@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 /**
  * A Consultation.
@@ -234,6 +235,27 @@ public class Consultation implements Serializable {
 
     @Column(name = "z")
     private String z;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "exam_general")
+    private String examGeneral;
+
+    @Column(name = "frequence_respiratoire")
+    private Double frequenceRespiratoire;
+
+    @Column(name = "frequence_cardiaque")
+    private Double frequenceCardiaque;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "commentaire_libre")
+    private String commentaireLibre;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "resultats_paraclinique")
+    private String resultatsParaclinique;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "dossierMedical", "consultations" }, allowSetters = true)
@@ -1142,6 +1164,71 @@ public class Consultation implements Serializable {
         this.z = z;
     }
 
+    public String getExamGeneral() {
+        return this.examGeneral;
+    }
+
+    public Consultation examGeneral(String examGeneral) {
+        this.setExamGeneral(examGeneral);
+        return this;
+    }
+
+    public void setExamGeneral(String examGeneral) {
+        this.examGeneral = examGeneral;
+    }
+
+    public Double getFrequenceRespiratoire() {
+        return this.frequenceRespiratoire;
+    }
+
+    public Consultation frequenceRespiratoire(Double frequenceRespiratoire) {
+        this.setFrequenceRespiratoire(frequenceRespiratoire);
+        return this;
+    }
+
+    public void setFrequenceRespiratoire(Double frequenceRespiratoire) {
+        this.frequenceRespiratoire = frequenceRespiratoire;
+    }
+
+    public Double getFrequenceCardiaque() {
+        return this.frequenceCardiaque;
+    }
+
+    public Consultation frequenceCardiaque(Double frequenceCardiaque) {
+        this.setFrequenceCardiaque(frequenceCardiaque);
+        return this;
+    }
+
+    public void setFrequenceCardiaque(Double frequenceCardiaque) {
+        this.frequenceCardiaque = frequenceCardiaque;
+    }
+
+    public String getCommentaireLibre() {
+        return this.commentaireLibre;
+    }
+
+    public Consultation commentaireLibre(String commentaireLibre) {
+        this.setCommentaireLibre(commentaireLibre);
+        return this;
+    }
+
+    public void setCommentaireLibre(String commentaireLibre) {
+        this.commentaireLibre = commentaireLibre;
+    }
+
+    public String getResultatsParaclinique() {
+        return this.resultatsParaclinique;
+    }
+
+    public Consultation resultatsParaclinique(String resultatsParaclinique) {
+        this.setResultatsParaclinique(resultatsParaclinique);
+        return this;
+    }
+
+    public void setResultatsParaclinique(String resultatsParaclinique) {
+        this.resultatsParaclinique = resultatsParaclinique;
+    }
+
     public Patient getPatient() {
         return this.patient;
     }
@@ -1266,6 +1353,11 @@ public class Consultation implements Serializable {
             ", eAAa='" + geteAAa() + "'" +
             ", eEa='" + geteEa() + "'" +
             ", z='" + getZ() + "'" +
+            ", examGeneral='" + getExamGeneral() + "'" +
+            ", frequenceRespiratoire=" + getFrequenceRespiratoire() +
+            ", frequenceCardiaque=" + getFrequenceCardiaque() +
+            ", commentaireLibre='" + getCommentaireLibre() + "'" +
+            ", resultatsParaclinique='" + getResultatsParaclinique() + "'" +
             "}";
     }
 }

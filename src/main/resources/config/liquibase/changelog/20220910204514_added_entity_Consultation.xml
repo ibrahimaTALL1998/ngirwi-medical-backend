@@ -218,6 +218,21 @@
             <column name="z" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="exam_general" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="frequence_respiratoire" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="frequence_cardiaque" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="commentaire_libre" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="resultats_paraclinique" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
             <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -311,6 +326,11 @@
             <column name="e_a_aa" type="string"/>
             <column name="e_ea" type="string"/>
             <column name="z" type="string"/>
+            <column name="exam_general" type="clob"/>
+            <column name="frequence_respiratoire" type="numeric"/>
+            <column name="frequence_cardiaque" type="numeric"/>
+            <column name="commentaire_libre" type="clob"/>
+            <column name="resultats_paraclinique" type="clob"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

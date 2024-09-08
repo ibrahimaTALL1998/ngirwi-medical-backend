@@ -3,6 +3,7 @@ package sn.ngirwi.medical.service.dto;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+import javax.persistence.Lob;
 import javax.validation.constraints.*;
 
 /**
@@ -154,6 +155,19 @@ public class ConsultationDTO implements Serializable {
     private String eEa;
 
     private String z;
+
+    @Lob
+    private String examGeneral;
+
+    private Double frequenceRespiratoire;
+
+    private Double frequenceCardiaque;
+
+    @Lob
+    private String commentaireLibre;
+
+    @Lob
+    private String resultatsParaclinique;
 
     private PatientDTO patient;
 
@@ -709,6 +723,46 @@ public class ConsultationDTO implements Serializable {
         this.z = z;
     }
 
+    public String getExamGeneral() {
+        return examGeneral;
+    }
+
+    public void setExamGeneral(String examGeneral) {
+        this.examGeneral = examGeneral;
+    }
+
+    public Double getFrequenceRespiratoire() {
+        return frequenceRespiratoire;
+    }
+
+    public void setFrequenceRespiratoire(Double frequenceRespiratoire) {
+        this.frequenceRespiratoire = frequenceRespiratoire;
+    }
+
+    public Double getFrequenceCardiaque() {
+        return frequenceCardiaque;
+    }
+
+    public void setFrequenceCardiaque(Double frequenceCardiaque) {
+        this.frequenceCardiaque = frequenceCardiaque;
+    }
+
+    public String getCommentaireLibre() {
+        return commentaireLibre;
+    }
+
+    public void setCommentaireLibre(String commentaireLibre) {
+        this.commentaireLibre = commentaireLibre;
+    }
+
+    public String getResultatsParaclinique() {
+        return resultatsParaclinique;
+    }
+
+    public void setResultatsParaclinique(String resultatsParaclinique) {
+        this.resultatsParaclinique = resultatsParaclinique;
+    }
+
     public PatientDTO getPatient() {
         return patient;
     }
@@ -811,6 +865,11 @@ public class ConsultationDTO implements Serializable {
             ", eAAa='" + geteAAa() + "'" +
             ", eEa='" + geteEa() + "'" +
             ", z='" + getZ() + "'" +
+            ", examGeneral='" + getExamGeneral() + "'" +
+            ", frequenceRespiratoire=" + getFrequenceRespiratoire() +
+            ", frequenceCardiaque=" + getFrequenceCardiaque() +
+            ", commentaireLibre='" + getCommentaireLibre() + "'" +
+            ", resultatsParaclinique='" + getResultatsParaclinique() + "'" +
             ", patient=" + getPatient() +
             "}";
     }
