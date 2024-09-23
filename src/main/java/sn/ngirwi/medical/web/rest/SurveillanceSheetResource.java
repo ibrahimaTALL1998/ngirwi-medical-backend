@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sn.ngirwi.medical.domain.SurveillanceSheet;
 import sn.ngirwi.medical.repository.SurveillanceSheetRepository;
 import sn.ngirwi.medical.service.SurveillanceSheetService;
+import sn.ngirwi.medical.service.dto.BillElementDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -183,5 +184,11 @@ public class SurveillanceSheetResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/surveillance-sheets/hospitalisation/{id}")
+    public List<SurveillanceSheet> getAllElementsByHospitalisationID(@PathVariable Long id) {
+        log.debug("REST request to get all sheets for a specific hospitalisation");
+        return surveillanceSheetService.findAll(id);
     }
 }

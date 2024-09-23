@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.SurveillanceSheet;
+import sn.ngirwi.medical.repository.HospitalRepository;
+import sn.ngirwi.medical.repository.HospitalisationRepository;
 import sn.ngirwi.medical.repository.SurveillanceSheetRepository;
 
 /**
@@ -20,9 +23,11 @@ public class SurveillanceSheetService {
     private final Logger log = LoggerFactory.getLogger(SurveillanceSheetService.class);
 
     private final SurveillanceSheetRepository surveillanceSheetRepository;
+    private final HospitalisationRepository hospitalisationRepository;
 
-    public SurveillanceSheetService(SurveillanceSheetRepository surveillanceSheetRepository) {
+    public SurveillanceSheetService(SurveillanceSheetRepository surveillanceSheetRepository, HospitalisationRepository hospitalisationRepository) {
         this.surveillanceSheetRepository = surveillanceSheetRepository;
+        this.hospitalisationRepository = hospitalisationRepository;
     }
 
     /**
@@ -111,6 +116,23 @@ public class SurveillanceSheetService {
     public Page<SurveillanceSheet> findAll(Pageable pageable) {
         log.debug("Request to get all SurveillanceSheets");
         return surveillanceSheetRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SurveillanceSheet> findAll(Long id) {
+        log.debug("Request to get all BillElemnts");
+        /*SurveillanceSheet surveillanceSheet = new SurveillanceSheet();
+        surveillanceSheet.setTemperature("4");
+        surveillanceSheet.setPulseRate("4");
+        surveillanceSheet.setRespiratoryFrequency("4");
+        surveillanceSheet.setRecolorationTime("4");
+        surveillanceSheet.setGlasgow("4");
+        surveillanceSheet.setSpo2("4");
+        surveillanceSheet.setGravityClass("I");
+        surveillanceSheet.setTreatment("I");
+        surveillanceSheet.setTa("I");
+        surveillanceSheet.setHospitalisation(hospitalisationRepository.findById(1051L).get());*/
+        return surveillanceSheetRepository.findByHospitalisation_Id(id);
     }
 
     /**

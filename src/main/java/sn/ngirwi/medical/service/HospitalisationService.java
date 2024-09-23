@@ -1,5 +1,6 @@
 package sn.ngirwi.medical.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ngirwi.medical.domain.Hospitalisation;
+import sn.ngirwi.medical.domain.SurveillanceSheet;
 import sn.ngirwi.medical.repository.HospitalisationRepository;
+import sn.ngirwi.medical.repository.SurveillanceSheetRepository;
 
 /**
  * Service Implementation for managing {@link Hospitalisation}.
@@ -20,9 +23,12 @@ public class HospitalisationService {
     private final Logger log = LoggerFactory.getLogger(HospitalisationService.class);
 
     private final HospitalisationRepository hospitalisationRepository;
+    private final SurveillanceSheetRepository surveillanceSheetRepository;
 
-    public HospitalisationService(HospitalisationRepository hospitalisationRepository) {
+    public HospitalisationService(HospitalisationRepository hospitalisationRepository,
+                                  SurveillanceSheetRepository surveillanceSheetRepository) {
         this.hospitalisationRepository = hospitalisationRepository;
+        this.surveillanceSheetRepository = surveillanceSheetRepository;
     }
 
     /**
@@ -32,6 +38,11 @@ public class HospitalisationService {
      * @return the persisted entity.
      */
     public Hospitalisation save(Hospitalisation hospitalisation) {
+        for (SurveillanceSheet s:
+             hospitalisation.getSurveillanceSheets()) {
+            s.setHospitalisation(hospitalisation);
+            surveillanceSheetRepository.save(s);
+        }
         log.debug("Request to save Hospitalisation : {}", hospitalisation);
         return hospitalisationRepository.save(hospitalisation);
     }
@@ -108,6 +119,11 @@ public class HospitalisationService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Hospitalisation : {}", id);
+        List<SurveillanceSheet> surveillanceSheets = surveillanceSheetRepository.findByHospitalisation_Id(id);
+        for (SurveillanceSheet s:
+             surveillanceSheets) {
+            surveillanceSheetRepository.deleteById(s.getId());
+        }
         hospitalisationRepository.deleteById(id);
     }
 }
