@@ -186,7 +186,8 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: ngirwimedical925@outlook.com
+#    from: ngirwimedical925@outlook.com
+    from: ngirwimedical925@gmail.com
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**

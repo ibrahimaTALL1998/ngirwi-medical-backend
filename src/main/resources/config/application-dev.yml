@@ -49,16 +49,18 @@ spring:
     #contexts: dev, faker
     contexts: dev
   mail:
-    host: smtp-mail.outlook.com
+    host: smtp.sendgrid.net
     port: 587
-    username: ngirwimedical925@outlook.com  #Replace this field with your Outlook username.
-    password: Ngirwi-Medical@2023             #Replace this field with your Outlook password.
+    username: apikey
+#    password: ${SENDGRID_API_KEY}
+    password: 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
     protocol: smtp
     tls: true
-    properties.mail.smtp:
-      auth: true
-      starttls.enable: true
-      ssl.trust: smtp-mail.outlook.com
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.trust: smtp.sendgrid.net
+    default-encoding: UTF-8
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
