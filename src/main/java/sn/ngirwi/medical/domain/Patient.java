@@ -83,6 +83,9 @@ public class Patient implements Serializable {
     @Column(name = "author")
     private String author;
 
+    @Column(name = "hospital_id")
+    private Long hospitalId;
+
     @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
     @OneToOne(mappedBy = "patient", fetch = FetchType.EAGER)
     private DossierMedical dossierMedical;
@@ -337,6 +340,14 @@ public class Patient implements Serializable {
         this.consultations.remove(consultation);
         consultation.setPatient(null);
         return this;
+    }
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

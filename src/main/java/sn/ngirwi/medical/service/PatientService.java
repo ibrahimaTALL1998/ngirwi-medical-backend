@@ -52,6 +52,8 @@ public class PatientService {
     public PatientDTO save(PatientDTO patientDTO) {
         log.debug("Request to save Patient : {}", patientDTO);
         Patient patient = patientMapper.toEntity(patientDTO);
+        User user = userRepository.findOneByLogin(patient.getAuthor()).get();
+        patient.setHospitalId(user.getHospitalId());
         patient = patientRepository.save(patient);
         return patientMapper.toDto(patient);
     }
@@ -104,15 +106,15 @@ public class PatientService {
     @Transactional(readOnly = true)
     public Page<PatientDTO> findAll(Pageable pageable, Long id) {
         log.debug("Request to get all Patients by hospital " + id );
-        List<User> users = userRepository.findByHospitalId(id);
-        List<String> logins = new ArrayList<>();
-        if (users.size() > 0){
-            for (User user : users) {
-                log.debug(user.toString());
-                logins.add(user.getLogin());
-            }
-        }
-        return patientRepository.findByAuthorIn(logins, pageable).map(patientMapper::toDto);
+//        List<User> users = userRepository.findByHospitalId(id);
+//        List<String> logins = new ArrayList<>();
+//        if (users.size() > 0){
+//            for (User user : users) {
+//                log.debug(user.toString());
+//                logins.add(user.getLogin());
+//            }
+//        }
+        return patientRepository.findByHospitalId(id, pageable).map(patientMapper::toDto);
     }
 
     /**

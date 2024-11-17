@@ -16,4 +16,6 @@ import java.util.Collection;
 public interface PatientRepository extends JpaRepository<Patient, Long> {
     Page<Patient> findByAuthorIn(Collection<String> authors, Pageable pageable);
 
+    Page<Patient> findByHospitalId(Long hospitalId, Pageable pageable);
+
 }
