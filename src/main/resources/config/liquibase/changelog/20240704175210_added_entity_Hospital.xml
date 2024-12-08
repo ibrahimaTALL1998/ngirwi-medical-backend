@@ -23,9 +23,12 @@
             <column name="phone" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="logo" type="${blobType}">
+            <column name="logo" type="bytea">
                 <constraints nullable="true" />
             </column>
+<!--            <column name="logo" type="${blobType}">-->
+<!--                <constraints nullable="true" />-->
+<!--            </column>-->
             <column name="logo_content_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>

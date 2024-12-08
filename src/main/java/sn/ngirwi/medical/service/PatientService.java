@@ -67,6 +67,8 @@ public class PatientService {
     public PatientDTO update(PatientDTO patientDTO) {
         log.debug("Request to update Patient : {}", patientDTO);
         Patient patient = patientMapper.toEntity(patientDTO);
+        User user = userRepository.findOneByLogin(patient.getAuthor()).get();
+        patient.setHospitalId(user.getHospitalId());
         patient = patientRepository.save(patient);
         return patientMapper.toDto(patient);
     }

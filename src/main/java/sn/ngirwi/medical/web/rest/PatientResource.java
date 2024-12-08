@@ -152,10 +152,10 @@ public class PatientResource {
         @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(required = false) String filter
     ) {
-        if ("dossiermedical-is-null".equals(filter)) {
-            log.debug("REST request to get all Patients where dossierMedical is null");
-            return new ResponseEntity<>(patientService.findAllWhereDossierMedicalIsNull(), HttpStatus.OK);
-        }
+//        if ("dossiermedical-is-null".equals(filter)) {
+//            log.debug("REST request to get all Patients where dossierMedical is null");
+//            return new ResponseEntity<>(patientService.findAllWhereDossierMedicalIsNull(), HttpStatus.OK);
+//        }
         log.debug("REST request to get a page of Patients");
         Page<PatientDTO> page = patientService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -167,10 +167,10 @@ public class PatientResource {
         @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(required = false) String filter, @PathVariable Long id
     ) {
-        if ("dossiermedical-is-null".equals(filter)) {
-            log.debug("REST request to get all Patients where dossierMedical is null");
-            return new ResponseEntity<>(patientService.findAllWhereDossierMedicalIsNull(), HttpStatus.OK);
-        }
+//        if ("dossiermedical-is-null".equals(filter)) {
+//            log.debug("REST request to get all Patients where dossierMedical is null");
+//            return new ResponseEntity<>(patientService.findAllWhereDossierMedicalIsNull(), HttpStatus.OK);
+//        }
         log.debug("REST request to get a page of Patients");
         Page<PatientDTO> page = patientService.findAll(pageable, id);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

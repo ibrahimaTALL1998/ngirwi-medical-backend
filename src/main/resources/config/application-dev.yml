@@ -32,16 +32,18 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./target/h2db/db/ngirwibackend;DB_CLOSE_DELAY=-1;MODE=LEGACY;AUTO_SERVER=TRUE
-    username: NgirwiBackEnd
-    password:
+#    url: jdbc:h2:file:./target/h2db/db/ngirwibackend;DB_CLOSE_DELAY=-1;MODE=LEGACY;AUTO_SERVER=TRUE
+    url: jdbc:postgresql://localhost:5432/ngirwimedical_db
+#    username: NgirwiBackEnd
+    username: ngirwimedicaluser
+    password: Ngirwi-medical2024
     hikari:
       poolName: Hikari
       auto-commit: false
   h2:
     console:
       # disable spring boot built-in h2-console since we start it manually with correct configuration
-      enabled: true
+      enabled: false
       path: /h2-console
   jpa:
   liquibase:

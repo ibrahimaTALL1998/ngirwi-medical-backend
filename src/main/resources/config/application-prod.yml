@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: INFO
-    tech.jhipster: INFO
-    sn.ngirwi.medical: INFO
+    ROOT: DEBUG
+    tech.jhipster: DEBUG
+    sn.ngirwi.medical: DEBUG
 
 management:
   metrics:
