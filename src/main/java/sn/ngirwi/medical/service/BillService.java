@@ -61,9 +61,9 @@ public class BillService {
         return billMapper.toDto(bill);
     }
 
-    public Bill mapElements(BillDTO billDto, Bill bill){
+    public Bill mapElements(BillDTO billDto, Bill bill) {
         Set<BillElement> billElements = new HashSet<>();
-        for (BillElementDTO billElementDTO : billDto.getBillElements()){
+        for (BillElementDTO billElementDTO : billDto.getBillElements()) {
             BillElement billElement = billElementMapper.toEntity(billElementDTO);
             billElement.setBill(bill);
 
@@ -82,7 +82,7 @@ public class BillService {
         bill = mapElements(billDTO, bill);
 
         // Save the Bill entity
-        if (bill.getTotal() == null){
+        if (bill.getTotal() == null) {
             bill.setTotal(calculateTotal(bill));
         }
         bill = billRepository.save(bill);
@@ -105,7 +105,7 @@ public class BillService {
         return billDTO;
     }
 
-    public BigDecimal calculateTotal(Bill bill){
+    public BigDecimal calculateTotal(Bill bill) {
         BigDecimal total = BigDecimal.ZERO;
         if (bill.getBillElements() != null) {
             for (BillElement element : bill.getBillElements()) {
@@ -119,7 +119,6 @@ public class BillService {
         }
         return total;
     }
-
 
 
     /**
@@ -140,16 +139,30 @@ public class BillService {
 
         Bill bill = billMapper.toEntity(billDTO);
         bill = mapElements(billDTO, bill);
+        log.debug("VALUES : {}", bill);
+        log.debug("FORM : {}", bill.getBillElements());
 
-        for (BillElement element : bill.getBillElements()) {
-            if (billDTO.getId() != null && billElementRepository.existsByNameAndPriceAndPercentageAndQuantityAndBill_Id(element.getName(), element.getPrice(), element.getPercentage(), element.getQuantity(), billDTO.getId())) {
-                billElementRepository.deleteByNameAndPriceAndPercentageAndQuantityAndBill_Id(element.getName(), element.getPrice(), element.getPercentage(), element.getQuantity(), billDTO.getId());
-            }
-            element.setBill(bill);
-            element = billElementRepository.save(element);
-            log.debug("SAVE CHECK " + element);
+        List<BillElement> oldElements = billElementRepository.findByBill_Id(billDTO.getId());
+
+        for (BillElement b : oldElements) {
+            billElementRepository.delete(b);
         }
 
+//        for (BillElement element : bill.getBillElements()) {
+//            if (billDTO.getId() != null && billElementRepository.existsByNameAndPriceAndPercentageAndQuantityAndBill_Id(element.getName(), element.getPrice(), element.getPercentage(), element.getQuantity(), billDTO.getId())) {
+//                billElementRepository.deleteByNameAndPriceAndPercentageAndQuantityAndBill_Id(element.getName(), element.getPrice(), element.getPercentage(), element.getQuantity(), billDTO.getId());
+//            }
+//            element.setBill(bill);
+//            element = billElementRepository.save(element);
+//            log.debug("SAVE CHECK " + element);
+//        }
+
+        for (BillElement element : bill.getBillElements()) {
+            element.setBill(bill);
+            element = billElementRepository.save(element);
+            log.debug("Saved BillElement: {}", element);
+        }
+        bill.setTotal(calculateTotal(bill));
         bill = billRepository.save(bill);
 
         log.debug(bill.toString());
@@ -187,8 +200,8 @@ public class BillService {
      */
     @Transactional(readOnly = true)
     //public Page<BillDTO> findAll(Pageable pageable) {
-     //   log.debug("Request to get all Bills");
-       // return billRepository.findAll(pageable).map(billMapper::toDto);
+    //   log.debug("Request to get all Bills");
+    // return billRepository.findAll(pageable).map(billMapper::toDto);
     //}
     public Page<Bill> findAll(Pageable pageable) {
         log.debug("Request to get all Bills");
@@ -197,10 +210,10 @@ public class BillService {
 
     @Transactional(readOnly = true)
     public Page<Bill> findAll(Pageable pageable, Long id) {
-        log.debug("Request to get all bills by hospital " + id );
+        log.debug("Request to get all bills by hospital " + id);
         List<User> users = userRepository.findByHospitalId(id);
         List<String> logins = new ArrayList<>();
-        if (users.size() > 0){
+        if (users.size() > 0) {
             for (User user : users) {
                 log.debug(user.toString());
                 logins.add(user.getLogin());

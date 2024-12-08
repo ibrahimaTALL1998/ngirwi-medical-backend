@@ -208,15 +208,25 @@ public class PrescriptionService {
         log.debug("VALUES : {}", prescription);
         log.debug("FORM : {}", prescription.getMedecines());
 
+        List<Medecine> oldMedecine = medecineRepository.findByOrdonance_Id(prescription.getId());
+
         //prescription = prescriptionRepository.save(prescription);
 
+        for (Medecine medecine : oldMedecine) {
+//            if (prescription.getId() != null && medecineRepository.existsByNameAndDurationAndFrequencyAndOrdonance_Id(medecine.getName(), medecine.getDuration(), medecine.getFrequency(), prescriptionDTO.getId())) {
+//                Medecine medecine1 = medecineRepository.findByNameAndDurationAndFrequencyAndOrdonance_Id(medecine.getName(), medecine.getDuration(), medecine.getFrequency(), prescriptionDTO.getId());
+//                medecineRepository.deleteById(medecine1.getId());
+//            }
+//            medecine.setOrdonance(prescription);
+//            medecineRepository.save(medecine);
+            medecineRepository.delete(medecine);
+        }
+
+        // Assuming prescriptionDTO has medicines mapped correctly
         for (Medecine medecine : prescription.getMedecines()) {
-            if (prescription.getId() != null && medecineRepository.existsByNameAndDurationAndFrequencyAndOrdonance_Id(medecine.getName(), medecine.getDuration(), medecine.getFrequency(), prescriptionDTO.getId())) {
-                Medecine medecine1 = medecineRepository.findByNameAndDurationAndFrequencyAndOrdonance_Id(medecine.getName(), medecine.getDuration(), medecine.getFrequency(), prescriptionDTO.getId());
-                medecineRepository.deleteById(medecine1.getId());
-            }
-            medecine.setOrdonance(prescription);
-            medecineRepository.save(medecine);
+            medecine.setOrdonance(prescription); // Associate medicine with prescription
+            // Remove manual save if cascade persist is configured
+            medecineRepository.save(medecine); // Remove this line if cascade persist is configured
         }
 
         //return prescriptionMapper.toDto(prescription);
