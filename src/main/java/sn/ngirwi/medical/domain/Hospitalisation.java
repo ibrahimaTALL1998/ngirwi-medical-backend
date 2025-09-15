@@ -2,6 +2,7 @@ package sn.ngirwi.medical.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -62,6 +63,26 @@ public class Hospitalisation extends AbstractAuditingEntity implements Serializa
     @NotBlank
     @Column(name = "service", length = 128)
     private String service;
+
+    /** Tarif journalier hospitalier (FCFA) — saisi par l'utilisateur */
+    @Column(name = "daily_rate", precision = 21, scale = 2)
+    private BigDecimal dailyRate;
+
+    /** Frais de confort (FCFA) — saisi par l'utilisateur */
+    @Column(name = "comfort_fees", precision = 21, scale = 2)
+    private BigDecimal comfortFees;
+
+    /** Dépassements d'honoraires (FCFA) — saisi par l'utilisateur */
+    @Column(name = "fee_overrun", precision = 21, scale = 2)
+    private BigDecimal feeOverrun;
+
+    /** Couverture assurance (%) — saisi par l'utilisateur, [0..100] */
+    @Column(name = "insurance_coverage_percent", precision = 5, scale = 2)
+    private BigDecimal insuranceCoveragePercent;
+
+    /** Montant total facturable (FCFA) — rempli lors de la finalisation */
+    @Column(name = "total_amount", precision = 21, scale = 2)
+    private BigDecimal totalAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dossier_medical_id")
@@ -204,6 +225,46 @@ public class Hospitalisation extends AbstractAuditingEntity implements Serializa
     public void removeSurveillanceSheet(SurveillanceSheet surveillanceSheet) {
         this.surveillanceSheets.remove(surveillanceSheet);
         surveillanceSheet.setHospitalisation(null);
+    }
+
+    public BigDecimal getDailyRate() {
+        return dailyRate;
+    }
+
+    public void setDailyRate(BigDecimal dailyRate) {
+        this.dailyRate = dailyRate;
+    }
+
+    public BigDecimal getComfortFees() {
+        return comfortFees;
+    }
+
+    public void setComfortFees(BigDecimal comfortFees) {
+        this.comfortFees = comfortFees;
+    }
+
+    public BigDecimal getFeeOverrun() {
+        return feeOverrun;
+    }
+
+    public void setFeeOverrun(BigDecimal feeOverrun) {
+        this.feeOverrun = feeOverrun;
+    }
+
+    public BigDecimal getInsuranceCoveragePercent() {
+        return insuranceCoveragePercent;
+    }
+
+    public void setInsuranceCoveragePercent(BigDecimal insuranceCoveragePercent) {
+        this.insuranceCoveragePercent = insuranceCoveragePercent;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     // ============================

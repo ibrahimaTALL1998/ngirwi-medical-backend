@@ -1,7 +1,10 @@
 package sn.ngirwi.medical.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -15,6 +18,7 @@ import sn.ngirwi.medical.domain.*;
 import sn.ngirwi.medical.domain.enumeration.HospitalisationStatus;
 import sn.ngirwi.medical.repository.*;
 import sn.ngirwi.medical.service.dto.HospitalisationDTO;
+import sn.ngirwi.medical.service.dto.HospitalisationResumeDTO;
 import sn.ngirwi.medical.service.mapper.HospitalisationMapper;
 
 @Service
@@ -394,5 +398,99 @@ public class HospitalisationService {
 
         billRepository.save(bill);
         log.debug("Created Bill id={} for hospitalisation id={}", bill.getId(), hospitalisation.getId());
+    }
+
+    // -------------------------
+    // Calcul
+    // -------------------------
+
+    private static final ZoneId ZONE_DAKAR = ZoneId.of("Africa/Dakar");
+    private static final int SCALE_INTERNAL = 2;
+    private static final int SCALE_FINAL = 0;
+    private static final RoundingMode ROUNDING = RoundingMode.HALF_UP;
+
+    /**
+     * Calcule le résumé de facturation d'une hospitalisation SANS persister.
+     * Récupère Σ(médicaments + actes) via les SurveillanceSheet (journalier),
+     * calcule nbJours = dateSortie - dateEntree (min 1), puis applique les postes
+     * saisis dans Hospitalisation et la couverture d'assurance.
+     */
+    @Transactional(readOnly = true)
+    public HospitalisationResumeDTO calculateResume(Long hospitalisationId) {
+        Hospitalisation h = hospitalisationRepository
+            .findById(hospitalisationId)
+            .orElseThrow(() -> new NoSuchElementException("Hospitalisation not found: " + hospitalisationId));
+
+        if (h.getReleaseDate() == null) {
+            throw new IllegalStateException("releaseDate est requis pour calculer le coût total (fin d'hospitalisation).");
+        }
+
+        int days = computeDaysBetween(h.getEntryDate(), h.getReleaseDate());
+
+        BigDecimal dailyRate = nvl(h.getDailyRate());
+        BigDecimal forfait = dailyRate.multiply(BigDecimal.valueOf(days)).setScale(SCALE_INTERNAL, ROUNDING);
+
+        BigDecimal confort = nvl(h.getComfortFees());
+        BigDecimal depassement = nvl(h.getFeeOverrun());
+
+        java.util.List<SurveillanceSheet> sheets = surveillanceSheetRepository.findByHospitalisation_Id(hospitalisationId);
+
+        BigDecimal medsTotal = BigDecimal.ZERO;
+        BigDecimal actsTotal = BigDecimal.ZERO;
+        for (SurveillanceSheet s : sheets) {
+            medsTotal = medsTotal.add(s.getMedications().stream().map(MedicationEntry::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add));
+            actsTotal = actsTotal.add(s.getActs().stream().map(ActEntry::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+        medsTotal = medsTotal.setScale(SCALE_INTERNAL, ROUNDING);
+        actsTotal = actsTotal.setScale(SCALE_INTERNAL, ROUNDING);
+
+        BigDecimal subtotal = forfait.add(confort).add(depassement).add(medsTotal).add(actsTotal).setScale(SCALE_INTERNAL, ROUNDING);
+
+        BigDecimal pct = nvl(h.getInsuranceCoveragePercent());
+        BigDecimal total = subtotal
+            .multiply(BigDecimal.ONE.subtract(pct.divide(BigDecimal.valueOf(100), 6, ROUNDING)))
+            .setScale(SCALE_FINAL, ROUNDING);
+
+        HospitalisationResumeDTO dto = new HospitalisationResumeDTO();
+        dto.setHospitalisationId(h.getId());
+        dto.setEntryDate(h.getEntryDate());
+        dto.setReleaseDate(h.getReleaseDate());
+        dto.setNumberOfDays(days);
+        dto.setDailyRate(dailyRate);
+        dto.setForfaitSejour(forfait);
+        dto.setComfortFees(confort);
+        dto.setFeeOverrun(depassement);
+        dto.setMedsTotal(medsTotal);
+        dto.setActsTotal(actsTotal);
+        dto.setSubtotal(subtotal);
+        dto.setInsuranceCoveragePercent(pct);
+        dto.setTotalAmount(total);
+        return dto;
+    }
+
+    /**
+     * Finalise la facturation .
+     */
+    public HospitalisationResumeDTO finalizeBilling(Long hospitalisationId) {
+        HospitalisationResumeDTO dto = calculateResume(hospitalisationId);
+        Hospitalisation h = hospitalisationRepository
+            .findById(hospitalisationId)
+            .orElseThrow(() -> new NoSuchElementException("Hospitalisation not found: " + hospitalisationId));
+
+        h.setTotalAmount(dto.getTotalAmount());
+        hospitalisationRepository.save(h);
+        return dto;
+    }
+
+    private int computeDaysBetween(Instant entry, Instant release) {
+        if (entry == null || release == null) return 1;
+        java.time.LocalDate start = java.time.LocalDateTime.ofInstant(entry, ZONE_DAKAR).toLocalDate();
+        java.time.LocalDate end = java.time.LocalDateTime.ofInstant(release, ZONE_DAKAR).toLocalDate();
+        long days = ChronoUnit.DAYS.between(start, end);
+        return (int) Math.max(1L, days);
+    }
+
+    private static BigDecimal nvl(BigDecimal v) {
+        return v == null ? BigDecimal.ZERO : v;
     }
 }

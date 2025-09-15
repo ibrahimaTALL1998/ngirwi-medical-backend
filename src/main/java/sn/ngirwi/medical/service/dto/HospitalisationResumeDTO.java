@@ -1,6 +1,7 @@
 package sn.ngirwi.medical.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -27,6 +28,26 @@ public class HospitalisationResumeDTO implements Serializable {
     private String finalDiagnosis;
 
     private String status;
+
+    private Integer numberOfDays;
+
+    private BigDecimal dailyRate;
+
+    private BigDecimal forfaitSejour;
+
+    private BigDecimal comfortFees;
+
+    private BigDecimal feeOverrun;
+
+    private BigDecimal medsTotal;
+
+    private BigDecimal actsTotal;
+
+    private BigDecimal subtotal;
+
+    private BigDecimal insuranceCoveragePercent;
+
+    private BigDecimal totalAmount;
 
     // ==============================
     // Last Surveillance Sheet fields
@@ -228,6 +249,86 @@ public class HospitalisationResumeDTO implements Serializable {
         this.administeredMedication = administeredMedication;
     }
 
+    public Integer getNumberOfDays() {
+        return numberOfDays;
+    }
+
+    public void setNumberOfDays(Integer numberOfDays) {
+        this.numberOfDays = numberOfDays;
+    }
+
+    public BigDecimal getDailyRate() {
+        return dailyRate;
+    }
+
+    public void setDailyRate(BigDecimal dailyRate) {
+        this.dailyRate = dailyRate;
+    }
+
+    public BigDecimal getForfaitSejour() {
+        return forfaitSejour;
+    }
+
+    public void setForfaitSejour(BigDecimal forfaitSejour) {
+        this.forfaitSejour = forfaitSejour;
+    }
+
+    public BigDecimal getComfortFees() {
+        return comfortFees;
+    }
+
+    public void setComfortFees(BigDecimal comfortFees) {
+        this.comfortFees = comfortFees;
+    }
+
+    public BigDecimal getFeeOverrun() {
+        return feeOverrun;
+    }
+
+    public void setFeeOverrun(BigDecimal feeOverrun) {
+        this.feeOverrun = feeOverrun;
+    }
+
+    public BigDecimal getMedsTotal() {
+        return medsTotal;
+    }
+
+    public void setMedsTotal(BigDecimal medsTotal) {
+        this.medsTotal = medsTotal;
+    }
+
+    public BigDecimal getActsTotal() {
+        return actsTotal;
+    }
+
+    public void setActsTotal(BigDecimal actsTotal) {
+        this.actsTotal = actsTotal;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public BigDecimal getInsuranceCoveragePercent() {
+        return insuranceCoveragePercent;
+    }
+
+    public void setInsuranceCoveragePercent(BigDecimal insuranceCoveragePercent) {
+        this.insuranceCoveragePercent = insuranceCoveragePercent;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     // ==============================
     // equals & hashCode
     // ==============================
@@ -273,6 +374,26 @@ public class HospitalisationResumeDTO implements Serializable {
             ", status='" +
             status +
             '\'' +
+            ", numberOfDays=" +
+            numberOfDays +
+            ", dailyRate=" +
+            dailyRate +
+            ", forfaitSejour=" +
+            forfaitSejour +
+            ", comfortFees=" +
+            comfortFees +
+            ", feeOverrun=" +
+            feeOverrun +
+            ", medsTotal=" +
+            medsTotal +
+            ", actsTotal=" +
+            actsTotal +
+            ", subtotal=" +
+            subtotal +
+            ", insuranceCoveragePercent=" +
+            insuranceCoveragePercent +
+            ", totalAmount=" +
+            totalAmount +
             ", surveillanceSheetId=" +
             surveillanceSheetId +
             ", sheetDate=" +
@@ -289,6 +410,18 @@ public class HospitalisationResumeDTO implements Serializable {
             respirationRate +
             ", spo2=" +
             spo2 +
+            ", nursingNotes='" +
+            nursingNotes +
+            '\'' +
+            ", medicalObservations='" +
+            medicalObservations +
+            '\'' +
+            ", actsPerformed='" +
+            actsPerformed +
+            '\'' +
+            ", administeredMedication='" +
+            administeredMedication +
+            '\'' +
             '}'
         );
     }

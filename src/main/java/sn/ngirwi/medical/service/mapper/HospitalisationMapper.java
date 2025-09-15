@@ -16,6 +16,11 @@ public interface HospitalisationMapper {
     @Mapping(source = "patient.id", target = "patientId")
     @Mapping(source = "dossierMedical.id", target = "dossierMedicalId")
     @Mapping(target = "surveillanceSheetIds", expression = "java(mapSurveillanceSheetIds(hospitalisation.getSurveillanceSheets()))")
+    @Mapping(target = "dailyRate", source = "dailyRate")
+    @Mapping(target = "comfortFees", source = "comfortFees")
+    @Mapping(target = "feeOverrun", source = "feeOverrun")
+    @Mapping(target = "insuranceCoveragePercent", source = "insuranceCoveragePercent")
+    @Mapping(target = "totalAmount", source = "totalAmount")
     HospitalisationDTO toDto(Hospitalisation hospitalisation);
 
     // DTO -> Entity
@@ -23,6 +28,11 @@ public interface HospitalisationMapper {
     @Mapping(source = "patientId", target = "patient")
     @Mapping(source = "dossierMedicalId", target = "dossierMedical")
     @Mapping(target = "surveillanceSheets", ignore = true)
+    @Mapping(target = "dailyRate", source = "dailyRate")
+    @Mapping(target = "comfortFees", source = "comfortFees")
+    @Mapping(target = "feeOverrun", source = "feeOverrun")
+    @Mapping(target = "insuranceCoveragePercent", source = "insuranceCoveragePercent")
+    @Mapping(target = "totalAmount", source = "totalAmount")
     Hospitalisation toEntity(HospitalisationDTO dto);
 
     // Helper Methods

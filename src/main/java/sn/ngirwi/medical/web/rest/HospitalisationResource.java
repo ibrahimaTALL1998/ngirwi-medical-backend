@@ -22,6 +22,7 @@ import sn.ngirwi.medical.domain.enumeration.HospitalisationStatus;
 import sn.ngirwi.medical.repository.HospitalisationRepository;
 import sn.ngirwi.medical.service.HospitalisationService;
 import sn.ngirwi.medical.service.dto.HospitalisationDTO;
+import sn.ngirwi.medical.service.dto.HospitalisationResumeDTO;
 import sn.ngirwi.medical.web.rest.errors.BadRequestAlertException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -265,5 +266,25 @@ public class HospitalisationResource {
         );
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * GET /hospitalisations/{id}/resume : calcule et retourne le résumé de facturation SANS persister.
+     */
+    @GetMapping("/hospitalisations/{id}/resume")
+    public ResponseEntity<HospitalisationResumeDTO> getHospitalisationResume(@PathVariable Long id) {
+        log.debug("REST request to get billing resume for Hospitalisation : {}", id);
+        HospitalisationResumeDTO dto = hospitalisationService.calculateResume(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * POST /hospitalisations/{id}/finalize : calcule et PERSISTE le totalAmount (fin d'hospitalisation).
+     */
+    @PostMapping("/hospitalisations/{id}/finalize")
+    public ResponseEntity<HospitalisationResumeDTO> finalizeHospitalisationBilling(@PathVariable Long id) {
+        log.debug("REST request to finalize billing for Hospitalisation : {}", id);
+        HospitalisationResumeDTO dto = hospitalisationService.finalizeBilling(id);
+        return ResponseEntity.ok(dto);
     }
 }

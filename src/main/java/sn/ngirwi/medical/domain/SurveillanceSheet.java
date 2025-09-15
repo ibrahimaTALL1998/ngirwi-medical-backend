@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -88,6 +90,43 @@ public class SurveillanceSheet extends AbstractAuditingEntity implements Seriali
     @Lob
     @Column(name = "administered_medication") // Medecine
     private String administeredMedication;
+
+    /** Médicaments administrés (journalier) — saisis par l'utilisateur */
+    @ElementCollection
+    @CollectionTable(name = "surveillance_sheet_medications", joinColumns = @JoinColumn(name = "surveillance_sheet_id"))
+    private List<MedicationEntry> medications = new ArrayList<>();
+
+    /** Actes/soins réalisés (journalier) — saisis par l'utilisateur */
+    @ElementCollection
+    @CollectionTable(name = "surveillance_sheet_acts", joinColumns = @JoinColumn(name = "surveillance_sheet_id"))
+    private List<ActEntry> acts = new ArrayList<>();
+
+    /** Total journalier (médicaments + actes) calculé côté backend */
+    @Transient
+    public java.math.BigDecimal getDailyTotal() {
+        java.math.BigDecimal meds = medications
+            .stream()
+            .map(MedicationEntry::getTotal)
+            .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+        java.math.BigDecimal actz = acts.stream().map(ActEntry::getTotal).reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+        return meds.add(actz);
+    }
+
+    public List<MedicationEntry> getMedications() {
+        return medications;
+    }
+
+    public void setMedications(List<MedicationEntry> medications) {
+        this.medications = medications;
+    }
+
+    public List<ActEntry> getActs() {
+        return acts;
+    }
+
+    public void setActs(List<ActEntry> acts) {
+        this.acts = acts;
+    }
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

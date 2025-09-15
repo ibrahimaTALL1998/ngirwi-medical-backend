@@ -31,6 +31,16 @@ public class HospitalisationDTO implements Serializable {
 
     private Set<Long> surveillanceSheetIds;
 
+    private java.math.BigDecimal dailyRate;
+
+    private java.math.BigDecimal comfortFees;
+
+    private java.math.BigDecimal feeOverrun;
+
+    private java.math.BigDecimal insuranceCoveragePercent;
+
+    private java.math.BigDecimal totalAmount; // read-only pour l'UI
+
     public HospitalisationDTO() {}
 
     // =========================
@@ -133,6 +143,46 @@ public class HospitalisationDTO implements Serializable {
         this.surveillanceSheetIds = surveillanceSheetIds;
     }
 
+    public java.math.BigDecimal getDailyRate() {
+        return dailyRate;
+    }
+
+    public void setDailyRate(java.math.BigDecimal dailyRate) {
+        this.dailyRate = dailyRate;
+    }
+
+    public java.math.BigDecimal getComfortFees() {
+        return comfortFees;
+    }
+
+    public void setComfortFees(java.math.BigDecimal comfortFees) {
+        this.comfortFees = comfortFees;
+    }
+
+    public java.math.BigDecimal getFeeOverrun() {
+        return feeOverrun;
+    }
+
+    public void setFeeOverrun(java.math.BigDecimal feeOverrun) {
+        this.feeOverrun = feeOverrun;
+    }
+
+    public java.math.BigDecimal getInsuranceCoveragePercent() {
+        return insuranceCoveragePercent;
+    }
+
+    public void setInsuranceCoveragePercent(java.math.BigDecimal insuranceCoveragePercent) {
+        this.insuranceCoveragePercent = insuranceCoveragePercent;
+    }
+
+    public java.math.BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(java.math.BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     @Override
     public String toString() {
         return (
@@ -166,6 +216,16 @@ public class HospitalisationDTO implements Serializable {
             patientId +
             ", surveillanceSheetIds=" +
             surveillanceSheetIds +
+            ", dailyRate=" +
+            dailyRate +
+            ", comfortFees=" +
+            comfortFees +
+            ", feeOverrun=" +
+            feeOverrun +
+            ", insuranceCoveragePercent=" +
+            insuranceCoveragePercent +
+            ", totalAmount=" +
+            totalAmount +
             '}'
         );
     }
