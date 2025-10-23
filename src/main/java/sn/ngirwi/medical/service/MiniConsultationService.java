@@ -31,7 +31,7 @@ public class MiniConsultationService {
 
     public MiniConsultationDTO save(MiniConsultationDTO dto) {
         // Vérifier si la SurveillanceSheet existe
-        if (dto.getSurveillanceSheetId() != null && !surveillanceSheetRepository.existsById(dto.getSurveillanceSheetId())) {
+        if (dto.getSurveillanceSheetId() == null || !surveillanceSheetRepository.existsById(dto.getSurveillanceSheetId())) {
             throw new IllegalArgumentException("Invalid surveillanceSheetId: " + dto.getSurveillanceSheetId());
         }
 
@@ -58,12 +58,11 @@ public class MiniConsultationService {
      * Chercher la mini-consultation liée à une surveillance sheet.
      */
     @Transactional(readOnly = true)
-    public Optional<MiniConsultationDTO> findBySurveillanceSheet(Long surveillanceSheetId) {
+    public java.util.List<MiniConsultationDTO> findBySurveillanceSheet(Long surveillanceSheetId) {
         return miniConsultationRepository
-            .findAll()
+            .findBySurveillanceSheet_Id(surveillanceSheetId)
             .stream()
-            .filter(mc -> mc.getSurveillanceSheet() != null && mc.getSurveillanceSheet().getId().equals(surveillanceSheetId))
-            .findFirst()
-            .map(miniConsultationMapper::toDto);
+            .map(miniConsultationMapper::toDto)
+            .collect(java.util.stream.Collectors.toList());
     }
 }

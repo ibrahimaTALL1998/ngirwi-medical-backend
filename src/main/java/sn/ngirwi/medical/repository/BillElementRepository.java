@@ -16,4 +16,10 @@ public interface BillElementRepository extends JpaRepository<BillElement, Long> 
     boolean existsByNameAndPriceAndPercentageAndQuantityAndBill_Id(String name, Double price, Double percentage, Integer quantity, Long id);
 
     long deleteByNameAndPriceAndPercentageAndQuantityAndBill_Id(String name, Double price, Double percentage, Integer quantity, Long id);
+
+    @Query(
+        value = "select COALESCE(sum(CAST(price as decimal(21,2)) * COALESCE(quantity,0) * (1 - COALESCE(percentage,0)/100)),0) from bill_element where bill_id = :billId",
+        nativeQuery = true
+    )
+    java.math.BigDecimal computeTotalByBillId(@org.springframework.data.repository.query.Param("billId") Long billId);
 }

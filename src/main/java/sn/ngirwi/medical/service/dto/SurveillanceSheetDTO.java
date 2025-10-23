@@ -3,7 +3,8 @@ package sn.ngirwi.medical.service.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
+
+// removed legacy collections
 
 public class SurveillanceSheetDTO implements Serializable {
 
@@ -33,9 +34,7 @@ public class SurveillanceSheetDTO implements Serializable {
 
     private Long hospitalisationId;
 
-    private Long miniConsultationId;
-
-    private Set<Long> prescriptionIds;
+    // Mini-consultations handled via dedicated endpoints; not embedded here anymore.
 
     // Getters and setters
 
@@ -143,21 +142,7 @@ public class SurveillanceSheetDTO implements Serializable {
         this.hospitalisationId = hospitalisationId;
     }
 
-    public Long getMiniConsultationId() {
-        return miniConsultationId;
-    }
-
-    public void setMiniConsultationId(Long miniConsultationId) {
-        this.miniConsultationId = miniConsultationId;
-    }
-
-    public Set<Long> getPrescriptionIds() {
-        return prescriptionIds;
-    }
-
-    public void setPrescriptionIds(Set<Long> prescriptionIds) {
-        this.prescriptionIds = prescriptionIds;
-    }
+    // removed miniConsultationId & prescriptionIds
 
     @Override
     public String toString() {
@@ -181,8 +166,7 @@ public class SurveillanceSheetDTO implements Serializable {
             spo2 +
             ", hospitalisationId=" +
             hospitalisationId +
-            ", miniConsultationId=" +
-            miniConsultationId +
+            "" +
             '}'
         );
     }

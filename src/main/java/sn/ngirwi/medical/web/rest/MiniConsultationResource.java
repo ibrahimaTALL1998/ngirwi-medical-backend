@@ -54,8 +54,7 @@ public class MiniConsultationResource {
     }
 
     @GetMapping("/by-surveillance/{surveillanceSheetId}")
-    public ResponseEntity<MiniConsultationDTO> getBySurveillance(@PathVariable Long surveillanceSheetId) {
-        Optional<MiniConsultationDTO> dto = miniConsultationService.findBySurveillanceSheet(surveillanceSheetId);
-        return dto.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<MiniConsultationDTO>> getBySurveillance(@PathVariable Long surveillanceSheetId) {
+        return ResponseEntity.ok(miniConsultationService.findBySurveillanceSheet(surveillanceSheetId));
     }
 }

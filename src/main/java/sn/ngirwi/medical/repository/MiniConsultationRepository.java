@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 import sn.ngirwi.medical.domain.MiniConsultation;
 
 @Repository
-public interface MiniConsultationRepository extends JpaRepository<MiniConsultation, Long> {}
+public interface MiniConsultationRepository extends JpaRepository<MiniConsultation, Long> {
+    java.util.List<MiniConsultation> findBySurveillanceSheet_Id(Long surveillanceSheetId);
+}

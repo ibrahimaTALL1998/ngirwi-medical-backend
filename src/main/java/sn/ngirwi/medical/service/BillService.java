@@ -111,20 +111,26 @@ public class BillService {
     }
 
     public BigDecimal calculateTotal(Bill bill) {
+        // Prefer DB-side aggregation when the bill is already persisted (has an id)
+        if (bill.getId() != null) {
+            BigDecimal dbTotal = billElementRepository.computeTotalByBillId(bill.getId());
+            return dbTotal == null ? BigDecimal.ZERO : dbTotal.setScale(0, java.math.RoundingMode.HALF_UP);
+        }
+
         BigDecimal total = BigDecimal.ZERO;
-        if (bill.getBillElements() != null) {
-            for (BillElement element : bill.getBillElements()) {
-                Double allWithoutReduc =
-                    (element.getPrice() != null ? element.getPrice() : 0) * (element.getQuantity() != null ? element.getQuantity() : 0);
-                Double allWithReduc =
-                    allWithoutReduc - (allWithoutReduc * (element.getPercentage() != null ? element.getPercentage() : 0) / 100);
-                total = total.add(BigDecimal.valueOf(allWithReduc));
-            }
-        } else {
+        if (bill.getBillElements() == null) {
             log.debug("No BillElements found in bill");
             return total;
         }
-        return total;
+        for (BillElement element : bill.getBillElements()) {
+            BigDecimal unit = element.getPrice() == null ? BigDecimal.ZERO : BigDecimal.valueOf(element.getPrice());
+            int qty = element.getQuantity() == null ? 0 : element.getQuantity();
+            BigDecimal pct = element.getPercentage() == null ? BigDecimal.ZERO : BigDecimal.valueOf(element.getPercentage());
+            BigDecimal gross = unit.multiply(BigDecimal.valueOf(qty));
+            BigDecimal net = gross.subtract(gross.multiply(pct).divide(BigDecimal.valueOf(100), 6, java.math.RoundingMode.HALF_UP));
+            total = total.add(net);
+        }
+        return total.setScale(0, java.math.RoundingMode.HALF_UP);
     }
 
     /**

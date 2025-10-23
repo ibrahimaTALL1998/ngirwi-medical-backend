@@ -52,15 +52,12 @@ public class Hospitalisation extends AbstractAuditingEntity implements Serializa
     /*    @Column(name = "medical_history") // Dossier Medical
     private String medicalHistory;*/
 
-    @NotBlank
     @Column(name = "entry_diagnosis", length = 512)
     private String entryDiagnosis;
 
-    @NotBlank
     @Column(name = "final_diagnosis", length = 512)
     private String finalDiagnosis;
 
-    @NotBlank
     @Column(name = "service", length = 128)
     private String service;
 

@@ -5,9 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -29,7 +27,7 @@ public class SurveillanceSheet extends AbstractAuditingEntity implements Seriali
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator", allocationSize = 1)
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -134,18 +132,11 @@ public class SurveillanceSheet extends AbstractAuditingEntity implements Seriali
     @JsonIgnoreProperties(value = { "patient", "surveillanceSheets" }, allowSetters = true)
     private Hospitalisation hospitalisation;
 
-    @OneToOne(mappedBy = "surveillanceSheet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "surveillanceSheet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "surveillanceSheet" }, allowSetters = true)
-    private MiniConsultation miniConsultation;
+    private java.util.List<MiniConsultation> miniConsultations = new java.util.ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-        name = "surveillance_sheet_prescription",
-        joinColumns = @JoinColumn(name = "surveillance_sheet_id"),
-        inverseJoinColumns = @JoinColumn(name = "prescription_id")
-    )
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Prescription> prescriptions = new HashSet<>();
+    // Removed: legacy ManyToMany prescriptions link (out of scope for hospitalisation)
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -318,27 +309,12 @@ public class SurveillanceSheet extends AbstractAuditingEntity implements Seriali
         this.hospitalisation = hospitalisation;
     }
 
-    public MiniConsultation getMiniConsultation() {
-        return miniConsultation;
+    public java.util.List<MiniConsultation> getMiniConsultations() {
+        return miniConsultations;
     }
 
-    public SurveillanceSheet miniConsultation(MiniConsultation miniConsultation) {
-        this.miniConsultation = miniConsultation;
-        if (miniConsultation != null) miniConsultation.setSurveillanceSheet(this);
-        return this;
-    }
-
-    public void setMiniConsultation(MiniConsultation miniConsultation) {
-        this.miniConsultation = miniConsultation;
-        if (miniConsultation != null) miniConsultation.setSurveillanceSheet(this);
-    }
-
-    public Set<Prescription> getPrescriptions() {
-        return prescriptions;
-    }
-
-    public void setPrescriptions(Set<Prescription> prescriptions) {
-        this.prescriptions = prescriptions;
+    public void setMiniConsultations(java.util.List<MiniConsultation> miniConsultations) {
+        this.miniConsultations = miniConsultations;
     }
 
     @Override

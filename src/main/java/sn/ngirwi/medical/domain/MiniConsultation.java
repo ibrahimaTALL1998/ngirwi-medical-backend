@@ -1,6 +1,7 @@
 package sn.ngirwi.medical.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.*;
 
 @Entity
@@ -10,7 +11,8 @@ public class MiniConsultation extends AbstractAuditingEntity implements Serializ
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @Lob
@@ -21,15 +23,15 @@ public class MiniConsultation extends AbstractAuditingEntity implements Serializ
     private String diagnosis;
 
     /**
-     * Relation OneToOne :
-     * Chaque fiche de surveillance peut avoir au plus une mini-consultation.
+     * Relation ManyToOne : plusieurs mini-consultations peuvent être liées à une fiche.
      */
-    @OneToOne
-    @JoinColumn(name = "surveillance_sheet_id", unique = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "surveillance_sheet_id")
     private SurveillanceSheet surveillanceSheet;
 
-    @Column(name = "prescription_id")
-    private Long prescriptionId;
+    /** Prix de la mini-consultation (FCFA) */
+    @Column(name = "price", precision = 21, scale = 2)
+    private BigDecimal price;
 
     public MiniConsultation() {}
 
@@ -66,11 +68,11 @@ public class MiniConsultation extends AbstractAuditingEntity implements Serializ
         this.surveillanceSheet = surveillanceSheet;
     }
 
-    public Long getPrescriptionId() {
-        return prescriptionId;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPrescriptionId(Long prescriptionId) {
-        this.prescriptionId = prescriptionId;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

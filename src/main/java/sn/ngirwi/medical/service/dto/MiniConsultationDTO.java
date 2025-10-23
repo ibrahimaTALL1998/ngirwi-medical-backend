@@ -1,6 +1,7 @@
 package sn.ngirwi.medical.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class MiniConsultationDTO implements Serializable {
 
@@ -10,7 +11,7 @@ public class MiniConsultationDTO implements Serializable {
 
     private String diagnosis;
 
-    private Long prescriptionId;
+    private BigDecimal price;
 
     private Long surveillanceSheetId;
 
@@ -40,12 +41,12 @@ public class MiniConsultationDTO implements Serializable {
         this.diagnosis = diagnosis;
     }
 
-    public Long getPrescriptionId() {
-        return prescriptionId;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPrescriptionId(Long prescriptionId) {
-        this.prescriptionId = prescriptionId;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Long getSurveillanceSheetId() {
@@ -68,8 +69,8 @@ public class MiniConsultationDTO implements Serializable {
             ", diagnosis='" +
             diagnosis +
             '\'' +
-            ", prescriptionId=" +
-            prescriptionId +
+            ", price=" +
+            price +
             ", surveillanceSheetId=" +
             surveillanceSheetId +
             '}'

@@ -57,8 +57,7 @@ public class SurveillanceSheetService {
         }
 
         SurveillanceSheet entity = surveillanceSheetMapper.toEntity(dto);
-        // Le mapper positionne hospitalisation/miniConsultation via IDs.
-        // Les setters de l'entité synchronisent la bidirectionnalité pour miniConsultation.
+        // Le mapper positionne uniquement l'hospitalisation via l'ID.
 
         log.debug("Saving SurveillanceSheet (hospitalisationId={}, sheetDate={})", dto.getHospitalisationId(), dto.getSheetDate());
 
@@ -106,8 +105,7 @@ public class SurveillanceSheetService {
             });
 
         SurveillanceSheet toSave = surveillanceSheetMapper.toEntity(dto);
-        // Important : préserver la relation si le DTO n'a pas tout (selon ton DTO réel)
-        // Ici, on considère que le DTO est "complet" (pattern JHipster). Sinon, utiliser une copie champ-à-champ.
+        // Important : le DTO ne transporte plus les mini-consultations ni les prescriptions.
 
         log.debug("Updating SurveillanceSheet id={}, hospitalisationId={}, sheetDate={}", dto.getId(), newHospId, newDate);
 
@@ -174,17 +172,7 @@ public class SurveillanceSheetService {
                     existing.setHospitalisation(h);
                 }
 
-                if (dto.getMiniConsultationId() != null) {
-                    MiniConsultation mc = new MiniConsultation();
-                    mc.setId(dto.getMiniConsultationId());
-                    existing.setMiniConsultation(mc); // setter synchronise la relation inverse
-                }
-
-                // Prescriptions: selon ton design, PATCH peut remplacer ou ignorer.
-                // Ici, par prudence, on remplace seulement si dto.getPrescriptionIds() non nul.
-                if (dto.getPrescriptionIds() != null) {
-                    existing.setPrescriptions(surveillanceSheetMapper.mapIdsToPrescriptions(dto.getPrescriptionIds()));
-                }
+                // Mini-consultations et prescriptions non gérées par ce DTO/service.
 
                 return existing;
             })

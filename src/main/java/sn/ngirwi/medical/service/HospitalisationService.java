@@ -66,8 +66,15 @@ public class HospitalisationService {
 
         // Prevent multiple STARTED hospitalisations for same patient
         if (
-            HospitalisationStatus.STARTED.equals(dto.getStatus()) &&
-            hospitalisationRepository.existsByPatientIdAndStatus(dto.getPatientId(), HospitalisationStatus.STARTED)
+            (
+                dto.getStatus() == null ||
+                HospitalisationStatus.STARTED.equals(dto.getStatus()) ||
+                HospitalisationStatus.ONGOING.equals(dto.getStatus())
+            ) &&
+            (
+                hospitalisationRepository.existsByPatientIdAndStatus(dto.getPatientId(), HospitalisationStatus.STARTED) ||
+                hospitalisationRepository.existsByPatientIdAndStatus(dto.getPatientId(), HospitalisationStatus.ONGOING)
+            )
         ) {
             throw new IllegalArgumentException("Patient already has an active hospitalisation");
         }
@@ -177,6 +184,22 @@ public class HospitalisationService {
             toSave.setSurveillanceSheets(sheets);
         } else {
             toSave.setSurveillanceSheets(existing.getSurveillanceSheets());
+        }
+
+        // Enforce one active hospitalisation per patient on status change
+        if (toSave.getStatus() == HospitalisationStatus.STARTED || toSave.getStatus() == HospitalisationStatus.ONGOING) {
+            Long pid = toSave.getPatient() != null ? toSave.getPatient().getId() : null;
+            if (pid != null) {
+                boolean hasStarted = hospitalisationRepository.existsByPatientIdAndStatus(pid, HospitalisationStatus.STARTED);
+                boolean hasOngoing = hospitalisationRepository.existsByPatientIdAndStatus(pid, HospitalisationStatus.ONGOING);
+                // allow current record itself: conservatively forbid if any other exists; cheap approach since we don't have a dedicated query
+                if (hasStarted || hasOngoing) {
+                    // If existing is active and it's not the same, reject
+                    if (existing.getStatus() != HospitalisationStatus.STARTED && existing.getStatus() != HospitalisationStatus.ONGOING) {
+                        throw new IllegalArgumentException("Patient already has an active hospitalisation");
+                    }
+                }
+            }
         }
 
         // Validate dates
@@ -437,14 +460,29 @@ public class HospitalisationService {
 
         BigDecimal medsTotal = BigDecimal.ZERO;
         BigDecimal actsTotal = BigDecimal.ZERO;
+        BigDecimal miniConsultsTotal = BigDecimal.ZERO;
         for (SurveillanceSheet s : sheets) {
             medsTotal = medsTotal.add(s.getMedications().stream().map(MedicationEntry::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add));
             actsTotal = actsTotal.add(s.getActs().stream().map(ActEntry::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add));
+            // Mini consultations
+            if (s.getMiniConsultations() != null) {
+                for (MiniConsultation mc : s.getMiniConsultations()) {
+                    java.math.BigDecimal p = mc.getPrice() == null ? BigDecimal.ZERO : mc.getPrice();
+                    miniConsultsTotal = miniConsultsTotal.add(p);
+                }
+            }
         }
         medsTotal = medsTotal.setScale(SCALE_INTERNAL, ROUNDING);
         actsTotal = actsTotal.setScale(SCALE_INTERNAL, ROUNDING);
+        miniConsultsTotal = miniConsultsTotal.setScale(SCALE_INTERNAL, ROUNDING);
 
-        BigDecimal subtotal = forfait.add(confort).add(depassement).add(medsTotal).add(actsTotal).setScale(SCALE_INTERNAL, ROUNDING);
+        BigDecimal subtotal = forfait
+            .add(confort)
+            .add(depassement)
+            .add(medsTotal)
+            .add(actsTotal)
+            .add(miniConsultsTotal)
+            .setScale(SCALE_INTERNAL, ROUNDING);
 
         BigDecimal pct = nvl(h.getInsuranceCoveragePercent());
         BigDecimal total = subtotal
@@ -462,6 +500,7 @@ public class HospitalisationService {
         dto.setFeeOverrun(depassement);
         dto.setMedsTotal(medsTotal);
         dto.setActsTotal(actsTotal);
+        // We reuse medsTotal/actsTotal fields; no dedicated field for mini consultations in Resume DTO; subtotal includes it.
         dto.setSubtotal(subtotal);
         dto.setInsuranceCoveragePercent(pct);
         dto.setTotalAmount(total);
